@@ -32,10 +32,18 @@
     header {
       position: relative;
       /* Top-to-bottom gradient: Darker at the top for text legibility, fading to transparent at the bottom */
-      background-image: linear-gradient(to bottom, rgba(30, 54, 45, 0.7) 0%, rgba(30, 54, 45, 0.1) 70%), url('assets/images/hero-exterior.JPG');
+      background-image: linear-gradient(to bottom, rgba(30, 54, 45, 0.8) 0%, rgba(30, 54, 45, 0) 60%), url('assets/images/hero-exterior.JPG');
       background-size: cover;
-      background-position: center 30%; /* Shifted slightly down so the house is prominent */
-      padding: 70px 20px;
+      background-position: center center;
+      width: 100%;
+      aspect-ratio: 12 / 5; /* Matches the 1200x500 proportion exactly */
+      max-height: 500px;
+      min-height: 220px; /* Ensures it doesn't get too small on mobile screens */
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      padding-top: max(40px, 6%); /* Positions text nicely in the upper sky area */
+      align-items: center;
       text-align: center;
       color: white;
       border-bottom: 4px solid var(--accent-color);
