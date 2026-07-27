@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Gyvelbakken 10 — Guest Hub</title>
+  <style>
+    :root {
+      --bg-color: #f8f9fa;
+      --card-bg: #ffffff;
+      --text-main: #212529;
+      --text-muted: #6c757d;
+      --accent-color: #2b4c3f; /* Forest / Nordic Green */
+      --accent-light: #e8f0ec;
+      --border-color: #e9ecef;
+      --shadow-sm: 0 2px 4px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+      --radius: 12px;
+      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-family);
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding-bottom: 60px;
+    }
+
+    header {
+      background-color: var(--card-bg);
+      border-bottom: 1px solid var(--border-color);
+      padding: 24px 20px;
+      text-align: center;
+    }
+    header h1 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: var(--accent-color);
+      letter-spacing: -0.5px;
+    }
+    header p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-top: 4px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Arrival Quick Strip */
+    .arrival-card {
+      background-color: var(--accent-color);
+      color: white;
+      border-radius: var(--radius);
+      padding: 20px;
+      margin: 24px 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      box-shadow: var(--shadow-md);
+    }
+    .arrival-item h4 {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      opacity: 0.8;
+      margin-bottom: 4px;
+    }
+    .arrival-item p {
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+    .arrival-item a {
+      color: white;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    /* Tabs */
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+      border-bottom: 2px solid var(--border-color);
+      margin-bottom: 24px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+    .tab-btn {
+      background: none;
+      border: none;
+      padding: 10px 18px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-radius: 8px 8px 0 0;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+    .tab-btn:hover {
+      color: var(--accent-color);
+      background-color: rgba(43, 76, 63, 0.05);
+    }
+    .tab-btn.active {
+      color: var(--accent-color);
+      border-bottom: 3px solid var(--accent-color);
+      font-weight: 600;
+      background-color: var(--card-bg);
+    }
+
+    /* Content Cards */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .card {
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      border: 1px solid var(--border-color);
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+    .card h2 {
+      font-size: 1.3rem;
+      color: var(--accent-color);
+      margin-bottom: 12px;
+    }
+    .card h3 {
+      font-size: 1.05rem;
+      margin: 16px 0 8px 0;
+    }
+    .card p, .card ul {
+      color: var(--text-main);
+      font-size: 0.95rem;
+    }
+    .card ul {
+      list-style-type: disc;
+      padding-left: 20px;
+    }
+    .card li { margin-bottom: 6px; }
+
+    /* Drive Link Buttons */
+    .drive-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--accent-light);
+      color: var(--accent-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+      padding: 10px 16px;
+      border-radius: 8px;
+      margin-top: 12px;
+      transition: background 0.2s ease;
+    }
+    .drive-link:hover {
+      background-color: #d8e6df;
+    }
+
+    /* Checklist */
+    .checklist { list-style: none !important; padding-left: 0 !important; }
+    .checklist li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent-color);
+    }
+
+    footer {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Gyvelbakken 10</h1>
+    <p>Veddinge Bakker, 4550 Asnæs • Welcome Hub</p>
+  </header>
+
+  <div class="container">
+    <!-- Quick Arrival Strip -->
+    <div class="arrival-card">
+      <div class="arrival-item">
+        <h4>Address</h4>
+        <p><a href="https://maps.google.com/?q=Gyvelbakken+10,+4550+Asnæs" target="_blank" rel="noopener">Gyvelbakken 10</a></p>
+      </div>
+      <div class="arrival-item">
+        <h4>Wi-Fi Network</h4>
+        <p id="wifi-ssid">Gyvelbakken10_Guest</p>
+      </div>
+      <div class="arrival-item">
+        <h4>Wi-Fi Password</h4>
+        <p><span id="wifi-pass">ReplaceWithPassword</span> (<a onclick="copyWifi()">Copy</a>)</p>
+      </div>
+      <div class="arrival-item">
+        <h4>Key Access</h4>
+        <p>Keybox near entrance</p>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+      <button class="tab-btn active" onclick="switchTab(event, 'overview')">Overview & Offsites</button>
+      <button class="tab-btn" onclick="switchTab(event, 'operations')">House Operations</button>
+      <button class="tab-btn" onclick="switchTab(event, 'community')">Community Rules</button>
+      <button class="tab-btn" onclick="switchTab(event, 'checkout')">Check-Out Checklist</button>
+    </nav>
+
+    <!-- TAB 1: OVERVIEW & WORKSESSION -->
+    <div id="overview" class="tab-content active">
+      <div class="card">
+        <h2>Property Overview</h2>
+        <p>Welcome to our summer home in Veddinge Bakker! Nestled in the hills of Odsherred, the property offers a quiet space for relaxation, family stays, or focused small-group work sessions.</p>
+        
+        <h3>Space & Sleeping Layout</h3>
+        <ul>
+          <li><strong>Bedrooms:</strong> Comfortable arrangements suitable for up to 6 adults.</li>
+          <li><strong>Main Living Area:</strong> Large dining table suitable for shared meals or collaborative work sessions.</li>
+          <li><strong>Outdoors:</strong> Elevated wooden deck with seating and views of the surrounding hilly terrain.</li>
+        </ul>
+
+        <!-- Placeholder for Google Drive Floorplan / Photo Link -->
+        <a href="https://drive.google.com/drive/folders/YOUR_DRIVE_FOLDER_ID" target="_blank" class="drive-link">
+          📁 View Layout & Photos on Google Drive
+        </a>
+      </div>
+
+      <div class="card">
+        <h2>Work Session / Offsite Setup</h2>
+        <p>If you are here with a team for a work session (e.g. Kalundborg regional projects), here are quick connectivity details:</p>
+        <ul>
+          <li><strong>High-Speed Wi-Fi:</strong> Suitable for simultaneous video calls and work streams.</li>
+          <li><strong>Workspaces:</strong> Main dining room table comfortably seats 6 with nearby power outlets. Quiet corners available for individual calls.</li>
+          <li><strong>Parking:</strong> Space for 2-3 cars on the property driveway. Please do not block Gyvelbakken.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- TAB 2: HOUSE OPERATIONS -->
+    <div id="operations" class="tab-content">
+      <div class="card">
+        <h2>Heating & Climate</h2>
+        <h3>Heat Pump (Varmepumpe)</h3>
+        <p>The primary heat source is the heat pump in the main room. Use the remote control on the wall to set temperature (recommended: 20°C - 22°C while staying).</p>
+
+        <h3>Wood Stove (Brændeovn)</h3>
+        <p>Firewood is located under the deck shelter. Please ensure the flue damper is open before lighting a fire.</p>
+
+        <a href="https://drive.google.com/drive/folders/YOUR_DRIVE_FOLDER_ID" target="_blank" class="drive-link">
+          📄 Download Heat Pump Manual (PDF)
+        </a>
+      </div>
+
+      <div class="card">
+        <h2>Waste Sorting (Odsherred Kommune)</h2>
+        <p>Odsherred Kommune has strict sorting rules. Please separate garbage into the designated bins outside:</p>
+        <ul>
+          <li><strong>Restaffald:</strong> General non-recyclable waste.</li>
+          <li><strong>Madaffald:</strong> Food waste in green biodegradable bags.</li>
+          <li><strong>Plast / Papir / Metal:</strong> Clean dry recyclables in the dual bin.</li>
+        </ul>
+        <a href="https://drive.google.com/drive/folders/YOUR_DRIVE_FOLDER_ID" target="_blank" class="drive-link">
+          📄 View Waste Sorting Guide (PDF)
+        </a>
+      </div>
+    </div>
+
+    <!-- TAB 3: COMMUNITY RULES -->
+    <div id="community" class="tab-content">
+      <div class="card">
+        <h2>Strandgaardens Grundejerforening</h2>
+        <p>Gyvelbakken 10 is part of <strong>Strandgaardens Grundejerforening</strong>. To maintain good relationships with our neighbours, please adhere to community standards:</p>
+        <ul>
+          <li><strong>Quiet Hours:</strong> Keep noise levels low outdoors after 22:00, especially given the natural acoustics of the hills.</li>
+          <li><strong>Outdoor Fires:</strong> Open bonfires are strictly regulated due to fire risk in the hilly terrain. Use only designated BBQ facilities.</li>
+          <li><strong>Garbage Bins:</strong> Ensure bin lids are securely fastened so wildlife cannot access waste.</li>
+        </ul>
+        <a href="http://www.strandgaardens.dk" target="_blank" class="drive-link">
+          🌐 Visit Strandgaardens Grundejerforening Website
+        </a>
+      </div>
+    </div>
+
+    <!-- TAB 4: CHECK-OUT CHECKLIST -->
+    <div id="checkout" class="tab-content">
+      <div class="card">
+        <h2>Check-Out Checklist</h2>
+        <p>Before you depart, please complete these quick steps to leave the house secure:</p>
+        
+        <ul class="checklist">
+          <li>
+            <input type="checkbox" id="c1" />
+            <label for="c1">Set heat pump back to eco mode (16°C in winter / off in summer)</label>
+          </li>
+          <li>
+            <input type="checkbox" id="c2" />
+            <label for="c2">Ensure all windows and patio doors are securely locked</label>
+          </li>
+          <li>
+            <input type="checkbox" id="c3" />
+            <label for="c3">Empty food waste and take out main trash bins to the roadside</label>
+          </li>
+          <li>
+            <input type="checkbox" id="c4" />
+            <label for="c4">Turn off all lights and indoor electronic appliances</label>
+          </li>
+          <li>
+            <input type="checkbox" id="c5" />
+            <label for="c5">Return key to the keybox and scramble the code lock</label>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <footer>
+      <p>Gyvelbakken 10 • Veddinge Bakker, 4550 Asnæs</p>
+      <p>Questions? Contact Serge or Kirstine</p>
+    </footer>
+  </div>
+
+  <script>
+    function switchTab(evt, tabName) {
+      const contents = document.querySelectorAll('.tab-content');
+      contents.forEach(c => c.classList.remove('active'));
+
+      const buttons = document.querySelectorAll('.tab-btn');
+      buttons.forEach(b => b.classList.remove('active'));
+
+      document.getElementById(tabName).classList.add('active');
+      evt.currentTarget.classList.add('active');
+    }
+
+    function copyWifi() {
+      const pass = document.getElementById('wifi-pass').innerText;
+      navigator.clipboard.writeText(pass);
+      alert('Wi-Fi password copied to clipboard!');
+    }
+  </script>
+</body>
+</html>
