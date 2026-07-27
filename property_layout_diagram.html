@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gyvelbakken 10 - Property Layout</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & Playfair Display -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        nordic: {
+                            bg: '#F8F6F0',
+                            card: '#FFFFFF',
+                            text: '#2C3531',
+                            muted: '#6B7A74',
+                            border: '#E2DFD7',
+                            wood: '#E8D8C4',
+                            woodDark: '#CBB499',
+                            sage: '#DCE4D8',
+                            sageDark: '#7A8F78',
+                            fjord: '#DDE5EC',
+                            fjordDark: '#5B7285',
+                            terracotta: '#E8D0C5',
+                            terracottaDark: '#C07A63',
+                            wall: '#343E38',
+                            deck: '#ECE1D2'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #F8F6F0;
+            color: #2C3531;
+            font-family: 'Inter', sans-serif;
+            user-select: none;
+        }
+
+        .nordic-shadow {
+            box-shadow: 0 10px 30px -5px rgba(44, 53, 49, 0.05), 0 4px 12px -2px rgba(44, 53, 49, 0.03);
+        }
+
+        .interactive-room {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .interactive-room:hover {
+            filter: brightness(0.95);
+        }
+
+        .interactive-room.selected {
+            filter: brightness(0.92);
+        }
+
+        /* Smooth Canvas Transitions */
+        #svg-viewport {
+            transition: transform 0.1s ease-out;
+            transform-origin: center center;
+        }
+
+        /* Custom Scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F8F6F0;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D2CBC0;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #B0A698;
+        }
+    </style>
+</head>
+<body class="h-screen w-screen overflow-hidden flex flex-col md:flex-row">
+
+    <aside class="w-full md:w-80 lg:w-96 bg-white border-r border-nordic-border flex flex-col z-20 flex-shrink-0 h-auto md:h-full shadow-lg">
+        <!-- Header -->
+        <div class="p-5 border-b border-nordic-border bg-[#FBF9F5]">
+            <div class="flex items-center justify-between mb-1">
+                <span class="text-xs uppercase tracking-widest font-semibold text-nordic-muted">Summer Home Layout</span>
+                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-nordic-sage text-nordic-sageDark">
+                    <i class="fa-solid fa-house-chimney text-[10px] mr-1"></i> Veddinge Bakker
+                </span>
+            </div>
+            <h1 class="text-2xl font-serif font-semibold text-nordic-text">Gyvelbakken 10</h1>
+        </div>
+
+        <!-- Layer Display Toggles -->
+        <div class="p-4 border-b border-nordic-border space-y-2 text-xs">
+            <label class="text-xs font-semibold uppercase tracking-wider text-nordic-muted block mb-2">Map Layers</label>
+            <label class="flex items-center justify-between cursor-pointer p-2 rounded-lg hover:bg-nordic-bg transition">
+                <span class="flex items-center text-nordic-text font-medium"><i class="fa-solid fa-couch w-5 text-nordic-muted"></i> Furniture Layout</span>
+                <input type="checkbox" id="toggle-furniture" checked onchange="renderSVG()" class="rounded text-nordic-sageDark focus:ring-nordic-sageDark">
+            </label>
+            <label class="flex items-center justify-between cursor-pointer p-2 rounded-lg hover:bg-nordic-bg transition">
+                <span class="flex items-center text-nordic-text font-medium"><i class="fa-solid fa-tag w-5 text-nordic-muted"></i> Room Labels</span>
+                <input type="checkbox" id="toggle-labels" checked onchange="renderSVG()" class="rounded text-nordic-sageDark focus:ring-nordic-sageDark">
+            </label>
+            <label class="flex items-center justify-between cursor-pointer p-2 rounded-lg hover:bg-nordic-bg transition">
+                <span class="flex items-center text-nordic-text font-medium"><i class="fa-solid fa-ruler-combined w-5 text-nordic-muted"></i> Area & Dimensions</span>
+                <input type="checkbox" id="toggle-dimensions" checked onchange="renderSVG()" class="rounded text-nordic-sageDark focus:ring-nordic-sageDark">
+            </label>
+        </div>
+
+        <!-- Quick Legend -->
+        <div class="p-4 flex-1 overflow-y-auto space-y-4">
+            <div class="pt-2">
+                <span class="text-xs font-semibold uppercase tracking-wider text-nordic-muted block mb-2">Color Key</span>
+                <div class="grid grid-cols-2 gap-2 text-[11px] text-nordic-muted">
+                    <div class="flex items-center space-x-2"><span class="w-3 h-3 rounded bg-nordic-wood inline-block"></span> <span>Living & Dining</span></div>
+                    <div class="flex items-center space-x-2"><span class="w-3 h-3 rounded bg-nordic-sage inline-block"></span> <span>Bedrooms</span></div>
+                    <div class="flex items-center space-x-2"><span class="w-3 h-3 rounded bg-nordic-fjord inline-block"></span> <span>Bathrooms</span></div>
+                    <div class="flex items-center space-x-2"><span class="w-3 h-3 rounded bg-nordic-terracotta inline-block"></span> <span>Entry</span></div>
+                    <div class="flex items-center space-x-2"><span class="w-3 h-3 rounded bg-[#E6E4DF] inline-block"></span> <span>Utility / Storage</span></div>
+                    <div class="flex items-center space-x-2"><span class="w-3 h-3 rounded bg-nordic-deck inline-block"></span> <span>Terraces</span></div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <main class="flex-1 relative bg-nordic-bg overflow-hidden flex flex-col">
+        <!-- Floating Canvas Toolbar -->
+        <div class="absolute top-4 right-4 z-10 flex flex-col space-y-2 bg-white/90 backdrop-blur-md p-1.5 rounded-xl border border-nordic-border shadow-md">
+            <button onclick="zoomIn()" class="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-nordic-bg text-nordic-text transition" title="Zoom In">
+                <i class="fa-solid fa-plus"></i>
+            </button>
+            <button onclick="zoomOut()" class="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-nordic-bg text-nordic-text transition" title="Zoom Out">
+                <i class="fa-solid fa-minus"></i>
+            </button>
+            <button onclick="resetZoom()" class="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-nordic-bg text-nordic-text transition" title="Center Diagram">
+                <i class="fa-solid fa-expand"></i>
+            </button>
+        </div>
+
+        <!-- Instruction Overlay -->
+        <div class="absolute top-4 left-4 z-10 bg-white/80 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-nordic-border text-xs text-nordic-muted hidden sm:flex items-center space-x-2 pointer-events-none">
+            <i class="fa-solid fa-hand-pointer text-nordic-terracottaDark"></i>
+            <span>Click any room for details • Scroll or drag to pan & zoom</span>
+        </div>
+
+        <!-- SVG Container -->
+        <div id="canvas-container" class="w-full h-full flex items-center justify-center cursor-grab active:cursor-grabbing overflow-hidden">
+            <svg id="svg-element" class="w-full h-full select-none" viewBox="0 0 1000 850">
+                <g id="svg-viewport">
+                    <!-- Dynamic Content Generated via JS -->
+                </g>
+            </svg>
+        </div>
+    </main>
+
+    <div id="room-drawer" class="fixed right-0 top-0 bottom-0 w-full sm:w-96 bg-white shadow-2xl border-l border-nordic-border z-30 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
+        <div class="p-5 border-b border-nordic-border flex items-center justify-between bg-[#FBF9F5]">
+            <div class="flex items-center space-x-3">
+                <div id="drawer-icon-bg" class="w-10 h-10 rounded-xl flex items-center justify-center bg-nordic-sage text-nordic-sageDark text-lg">
+                    <i id="drawer-icon" class="fa-solid fa-bed"></i>
+                </div>
+                <div>
+                    <h2 id="drawer-title" class="font-serif font-semibold text-lg text-nordic-text">Master Bedroom</h2>
+                    <p id="drawer-subtitle" class="text-xs text-nordic-muted">Main House • 12 m²</p>
+                </div>
+            </div>
+            <button onclick="closeDrawer()" class="p-2 rounded-lg hover:bg-nordic-bg text-nordic-muted hover:text-nordic-text transition">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
+
+        <div class="p-6 overflow-y-auto flex-1 space-y-6">
+            <!-- Room Overview -->
+            <div>
+                <h3 class="text-xs font-semibold uppercase tracking-wider text-nordic-muted mb-2">Description</h3>
+                <p id="drawer-desc" class="text-sm text-nordic-text leading-relaxed"></p>
+            </div>
+
+            <!-- Sleeping Capacity / Key Specs -->
+            <div id="drawer-specs-container" class="grid grid-cols-2 gap-3">
+                <div class="p-3 bg-nordic-bg rounded-xl border border-nordic-border">
+                    <span class="text-[11px] text-nordic-muted block">Capacity / Beds</span>
+                    <span id="drawer-capacity" class="text-sm font-semibold text-nordic-text mt-0.5 block"></span>
+                </div>
+                <div class="p-3 bg-nordic-bg rounded-xl border border-nordic-border">
+                    <span class="text-[11px] text-nordic-muted block">Floor Area</span>
+                    <span id="drawer-area" class="text-sm font-semibold text-nordic-text mt-0.5 block"></span>
+                </div>
+            </div>
+
+            <!-- Features & Amenities -->
+            <div>
+                <h3 class="text-xs font-semibold uppercase tracking-wider text-nordic-muted mb-3">Key Features</h3>
+                <ul id="drawer-features" class="space-y-2 text-xs text-nordic-text"></ul>
+            </div>
+
+            <!-- Summer Home Guest Tips -->
+            <div class="p-4 bg-[#F6F8F5] rounded-xl border border-[#D0DCD0]">
+                <div class="flex items-center space-x-2 text-nordic-sageDark font-semibold text-xs mb-1">
+                    <i class="fa-solid fa-lightbulb"></i>
+                    <span>Guest Information & Tips</span>
+                </div>
+                <p id="drawer-tips" class="text-xs text-nordic-text leading-relaxed"></p>
+            </div>
+        </div>
+
+        <div class="p-4 border-t border-nordic-border bg-[#FBF9F5] flex justify-end">
+            <button onclick="closeDrawer()" class="px-4 py-2 bg-nordic-text text-white text-xs font-medium rounded-lg hover:bg-black transition">
+                Close
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let currentView = 'site';
+        let selectedRoomId = null;
+        let scale = 1;
+        let translateX = 0;
+        let translateY = 0;
+        let isDragging = false;
+        let startX = 0, startY = 0;
+
+        const roomsData = {
+            // MAIN HOUSE ROOMS
+            'main_stue': {
+                name: 'Living Room',
+                building: 'Main House',
+                area: '35 m²',
+                capacity: 'Seating for 8+',
+                fill: '#E8D8C4', stroke: '#CBB499', icon: 'fa-couch',
+                desc: 'Bright, airy living space with high ceilings, wood-burning stove, large glass patio doors, and direct garden access.',
+                features: ['Wood-burning stove', 'Comfy sofa lounge area', 'Terrace sliding doors', 'Scenic garden views'],
+                tips: 'Firewood is stocked in the outdoor shed. Please open the damper before lighting the stove.'
+            },
+            'main_kokken': {
+                name: 'Kitchen & Dining',
+                building: 'Main House',
+                area: '28 m²',
+                capacity: 'Dining table for 8-10',
+                fill: '#EFE6D5', stroke: '#CBB499', icon: 'fa-utensils',
+                desc: 'Open plan Nordic kitchen with central kitchen island, dining table, induction cooktop, oven, and dishwasher.',
+                features: ['Kitchen island', 'Induction stovetop & oven', 'Dishwasher & coffee bar', 'Direct dining access'],
+                tips: 'Dishwasher pods are located under the sink. Recycling bins are set up in the pantry.'
+            },
+            'main_master_bed': {
+                name: 'Master Bedroom',
+                building: 'Main House',
+                area: '12 m²',
+                capacity: '1 Double Bed (180x200)',
+                fill: '#DCE4D8', stroke: '#7A8F78', icon: 'fa-bed',
+                desc: 'Tranquil master bedroom in the private north wing with quiet garden exposure.',
+                features: ['King double bed (180cm)', 'Adjacent walk-in wardrobe', 'Garden window view', 'Reading light sconces'],
+                tips: 'Blackout curtains installed for comfortable summer sleep.'
+            },
+            'main_garderobe': {
+                name: 'Wardrobe / Depot',
+                building: 'Main House',
+                area: '6 m²',
+                capacity: 'Closet & Shelving',
+                fill: '#E6E4DF', stroke: '#A09D96', icon: 'fa-shirt',
+                desc: 'Dedicated wardrobe and storage closet adjacent to the master bedroom.',
+                features: ['Hanging wardrobe space', 'Luggage racks', 'Extra bedding storage'],
+                tips: 'Extra pillows and duvets are neatly stacked on the upper shelf.'
+            },
+            'main_wc': {
+                name: 'Bathroom 1',
+                building: 'Main House',
+                area: '5 m²',
+                capacity: 'Shower & WC',
+                fill: '#DDE5EC', stroke: '#5B7285', icon: 'fa-shower',
+                desc: 'Ground floor main house bathroom equipped with shower enclosure, sink, and toilet.',
+                features: ['Walk-in shower', 'Underfloor heating', 'Vanity mirror & towel rack'],
+                tips: 'Underfloor heating thermostat is located next to the light switch.'
+            },
+            'main_master_bath': {
+                name: 'Master Bathroom & Sauna',
+                building: 'Main House',
+                area: '6 m²',
+                capacity: 'Bathtub & Vanity',
+                fill: '#DDE5EC', stroke: '#5B7285', icon: 'fa-bath',
+                desc: 'Relaxing bathroom at the far end of the master wing, featuring a relaxing bathtub.',
+                features: ['Deep soaking bathtub', 'Natural daylight skylight/window', 'Modern faucet fixtures'],
+                tips: 'Hot water tank heats quickly. Perfect for a long soak after a day at the beach!'
+            },
+            'main_entre': {
+                name: 'Entrance',
+                building: 'Main House',
+                area: '5 m²',
+                capacity: 'Coat & Shoe Storage',
+                fill: '#E8D0C5', stroke: '#C07A63', icon: 'fa-door-open',
+                desc: 'Welcoming hallway entrance with coat hooks and shoe bench.',
+                features: ['Coat rack', 'Shoe storage bench', 'Main front door entry'],
+                tips: 'House key box code and welcome guide binder are kept on the entry shelf.'
+            },
+            'main_viktualie': {
+                name: 'Pantry',
+                building: 'Main House',
+                area: '3 m²',
+                capacity: 'Food Storage',
+                fill: '#E6E4DF', stroke: '#A09D96', icon: 'fa-box',
+                desc: 'Cool pantry room off the entrance for food storage, extra drinks, and recycling.',
+                features: ['Storage shelves', 'Recycling station', 'Extra pantry space'],
+                tips: 'Keeps pleasantly cool year round for fruit and drinks.'
+            },
+            'main_skur': {
+                name: 'Shed',
+                building: 'Main House',
+                area: '5 m²',
+                capacity: 'Utility Storage',
+                fill: '#E6E4DF', stroke: '#A09D96', icon: 'fa-warehouse',
+                desc: 'Attached owner storage shed for maintenance tools and water meter equipment.',
+                features: ['Water main inlet', 'Tools & maintenance', 'Secure locked space'],
+                tips: 'Main water shut-off valve is located in the corner meter box.'
+            },
+            'main_bed2': {
+                name: 'Guest Bed 1',
+                building: 'Main House',
+                area: '6 m²',
+                capacity: '1 Double Bed (140x200)',
+                fill: '#DCE4D8', stroke: '#7A8F78', icon: 'fa-bed',
+                desc: 'Cozy guest bedroom located off the main hallway.',
+                features: ['Double bed (140cm)', 'Window view', 'Wardrobe space'],
+                tips: 'Perfect for kids or a single couple.'
+            },
+            'main_bed3': {
+                name: 'Guest Bed 2',
+                building: 'Main House',
+                area: '8 m²',
+                capacity: '1 Double Bed (160x200)',
+                fill: '#DCE4D8', stroke: '#7A8F78', icon: 'fa-bed',
+                desc: 'Spacious guest bedroom off the main hallway with garden-facing window.',
+                features: ['Queen double bed (160cm)', 'Reading lights', 'Storage space'],
+                tips: 'Extra blankets can be found under the bed.'
+            },
+
+            // ANNEX ROOMS
+            'annex_room1': {
+                name: 'Guest Bed 1',
+                building: 'Annex',
+                area: '11 m²',
+                capacity: '1 Queen Bed (160x200)',
+                fill: '#DCE4D8', stroke: '#7A8F78', icon: 'fa-bed',
+                desc: 'Private double room in the annex building with direct garden French doors.',
+                features: ['Double bed (160cm)', 'Direct double glass patio doors', 'Quiet separate building'],
+                tips: 'Ideal for guests or teenagers seeking private accommodation space.'
+            },
+            'annex_bad': {
+                name: 'Bathroom',
+                building: 'Annex',
+                area: '5 m²',
+                capacity: 'Shower & WC',
+                fill: '#DDE5EC', stroke: '#5B7285', icon: 'fa-shower',
+                desc: 'Full modern bathroom serving the two annex guest bedrooms.',
+                features: ['Walk-in shower', 'Modern vanity sink', 'Toilet & heated towel rail'],
+                tips: 'Hot water is supplied by dedicated annex boiler.'
+            },
+            'annex_room2': {
+                name: 'Guest Bed 2',
+                building: 'Annex',
+                area: '11 m²',
+                capacity: '1 Queen Bed (160x200)',
+                fill: '#DCE4D8', stroke: '#7A8F78', icon: 'fa-bed',
+                desc: 'Second spacious double bedroom in the annex with direct garden views.',
+                features: ['Double bed (160cm)', 'Double French patio doors', 'Warm timber finishes'],
+                tips: 'Equipped with bedside charging outlets and cozy warm blankets.'
+            },
+            'annex_vask': {
+                name: 'Laundry Room',
+                building: 'Annex',
+                area: '5 m²',
+                capacity: 'Washer & Dryer',
+                fill: '#E6E4DF', stroke: '#A09D96', icon: 'fa-shirt',
+                desc: 'Utility and laundry room equipped with washing machine, dryer, and sink.',
+                features: ['Washing machine', 'Tumble dryer', 'Utility sink & detergent shelf'],
+                tips: 'Laundry detergent is kept in the wall cabinet above the sink.'
+            },
+            'annex_skur': {
+                name: 'Shed',
+                building: 'Annex',
+                area: '4 m²',
+                capacity: 'Outdoor Storage',
+                fill: '#E6E4DF', stroke: '#A09D96', icon: 'fa-sun',
+                desc: 'Outdoor gear storage for terrace cushions, lawn games, and BBQ accessories.',
+                features: ['Terrace cushions storage', 'Lawn games', 'Grill accessories'],
+                tips: 'Please store outdoor chair cushions back here overnight in case of morning dew.'
+            },
+            'annex_firewood': {
+                name: 'Firewood',
+                building: 'Annex',
+                area: '2 m²',
+                capacity: 'Wood Storage',
+                fill: '#E8D8C4', stroke: '#CBB499', icon: 'fa-fire',
+                desc: 'Covered storage keeping our firewood dry and ready for the living room stove.',
+                features: ['Seasoned firewood', 'Kindling & firestarters'],
+                tips: 'Feel free to use the wood for the indoor stove. Please keep the cover secure.'
+            },
+            'annex_shower': {
+                name: 'Outdoor Shower',
+                building: 'Annex',
+                area: '2 m²',
+                capacity: '1 Person',
+                fill: '#DDE5EC', stroke: '#5B7285', icon: 'fa-shower',
+                desc: 'Refreshing outdoor shower connected to hot water. Perfect after a beach trip.',
+                features: ['Hot and cold water', 'Privacy screen', 'Towel hooks'],
+                tips: 'Please rinse off sand here before heading inside!'
+            }
+        };
+
+        function renderSVG() {
+            const viewport = document.getElementById('svg-viewport');
+            const showFurniture = document.getElementById('toggle-furniture').checked;
+            const showLabels = document.getElementById('toggle-labels').checked;
+            const showDimensions = document.getElementById('toggle-dimensions').checked;
+
+            let html = '';
+
+            // Site Background
+            html += `
+                <rect x="0" y="0" width="1000" height="850" fill="#F8F6F0" />
+                <rect x="40" y="40" width="920" height="770" rx="24" fill="#F2ECE1" />
+            `;
+
+            // Terraces
+            html += `
+                <rect x="240" y="330" width="140" height="170" fill="#ECE1D2" />
+                <rect x="380" y="330" width="200" height="170" fill="#ECE1D2" />
+                <g stroke="#E0D2C0" stroke-width="1" opacity="0.6">
+                    <line x1="240" y1="350" x2="580" y2="350" />
+                    <line x1="240" y1="370" x2="580" y2="370" />
+                    <line x1="240" y1="390" x2="580" y2="390" />
+                    <line x1="240" y1="410" x2="580" y2="410" />
+                    <line x1="240" y1="430" x2="580" y2="430" />
+                    <line x1="240" y1="450" x2="580" y2="450" />
+                    <line x1="240" y1="470" x2="580" y2="470" />
+                    <line x1="240" y1="490" x2="580" y2="490" />
+                </g>
+                <line x1="380" y1="330" x2="380" y2="500" stroke="#D8C8B4" stroke-width="2" stroke-dasharray="6,4" />
+            `;
+            
+            if (showLabels) {
+                html += `
+                    <text x="310" y="400" font-size="11" font-weight="600" fill="#B09E88" letter-spacing="1" text-anchor="middle">COVERED TERRACE</text>
+                    <text x="480" y="400" font-size="11" font-weight="600" fill="#B09E88" letter-spacing="1" text-anchor="middle">COURTYARD TERRACE</text>
+                `;
+            }
+
+            // Outdoor Furniture
+            if (showFurniture) {
+                html += `
+                    <g transform="translate(430, 420)">
+                        <rect x="0" y="0" width="100" height="50" rx="6" fill="#D8C8B4" stroke="#B09E88" stroke-width="1.5" />
+                        <rect x="10" y="-12" width="20" height="8" rx="2" fill="#B09E88"/>
+                        <rect x="40" y="-12" width="20" height="8" rx="2" fill="#B09E88"/>
+                        <rect x="70" y="-12" width="20" height="8" rx="2" fill="#B09E88"/>
+                        <rect x="10" y="54" width="20" height="8" rx="2" fill="#B09E88"/>
+                        <rect x="40" y="54" width="20" height="8" rx="2" fill="#B09E88"/>
+                        <rect x="70" y="54" width="20" height="8" rx="2" fill="#B09E88"/>
+                    </g>
+                    <g transform="translate(600, 115)">
+                        <circle cx="0" cy="0" r="35" fill="#7A8F78" stroke="#5B7285" stroke-width="1.5"/>
+                        <circle cx="0" cy="0" r="28" fill="#343E38"/>
+                        <path d="M -3 0 L 3 0 M 0 -3 L 0 3" stroke="#7A8F78" stroke-width="1.5"/>
+                        ${showLabels ? `<text x="0" y="48" font-size="9" font-weight="600" fill="#7A8F78" letter-spacing="1" text-anchor="middle">TRAMPOLINE</text>` : ''}
+                    </g>
+                `;
+            }
+
+            // Annex Rooms
+            html += `<g id="annex-group">`;
+            if (showLabels) {
+                html += `<text x="310" y="55" font-size="14" font-weight="700" fill="#6B7A74" letter-spacing="2" text-anchor="middle">ANNEX</text>`;
+            }
+            html += renderRoomSvg('annex_firewood', 240, 70, 70, 30, showFurniture, showLabels, false);
+            html += renderRoomSvg('annex_shower', 310, 70, 70, 30, showFurniture, showLabels, false);
+            html += renderRoomSvg('annex_room1', 240, 100, 140, 65, showFurniture, showLabels, showDimensions);
+            html += renderRoomSvg('annex_bad', 240, 165, 75, 45, showFurniture, showLabels, showDimensions);
+            
+            html += `<rect x="315" y="165" width="65" height="45" fill="#E8D0C5" stroke="#6B7A74" stroke-width="1.5" />`;
+            if (showLabels) html += `<text x="347.5" y="190" font-size="11" font-weight="600" fill="#343E38" text-anchor="middle" pointer-events="none">Entrance</text>`;
+            
+            html += renderRoomSvg('annex_room2', 240, 210, 140, 65, showFurniture, showLabels, showDimensions);
+            html += renderRoomSvg('annex_vask', 240, 275, 70, 55, showFurniture, showLabels, showDimensions);
+            html += renderRoomSvg('annex_skur', 310, 275, 70, 55, showFurniture, showLabels, showDimensions);
+            html += `</g>`;
+
+            // Main House Rooms
+            html += `<g id="main-house-group">`;
+            html += renderRoomSvg('main_master_bath', 550, 180, 100, 70, showFurniture, showLabels, showDimensions);
+            html += renderRoomSvg('main_skur', 650, 180, 70, 70, showFurniture, showLabels, showDimensions);
+            html += renderRoomSvg('main_master_bed', 550, 250, 110, 85, showFurniture, showLabels, showDimensions);
+            html += renderRoomSvg('main_garderobe', 660, 250, 60, 85, showFurniture, showLabels, showDimensions);
+            
+            html += `<rect x="550" y="335" width="70" height="165" fill="#F0ECE1" />`;
+            if (showLabels) html += `<text x="585" y="417" font-size="9" fill="#928A7D" text-anchor="middle" transform="rotate(-90 585,417)">Hallway</text>`;
+            
+            html += renderRoomSvg('main_bed2', 620, 335, 100, 75, showFurniture, showLabels, showDimensions);
+            html += renderRoomSvg('main_bed3', 620, 410, 100, 90, showFurniture, showLabels, showDimensions);
+            html += renderRoomSvg('main_stue', 240, 500, 200, 220, showFurniture, showLabels, showDimensions);
+            html += renderRoomSvg('main_kokken', 440, 500, 180, 220, showFurniture, showLabels, showDimensions);
+            html += renderRoomSvg('main_entre', 620, 630, 100, 90, showFurniture, showLabels, showDimensions);
+            html += renderRoomSvg('main_wc', 620, 545, 100, 85, showFurniture, showLabels, showDimensions);
+            html += renderRoomSvg('main_viktualie', 620, 500, 100, 45, showFurniture, showLabels, showDimensions);
+            html += `</g>`;
+
+            viewport.innerHTML = html;
+        }
+
+        function renderRoomSvg(id, x, y, w, h, showFurniture, showLabels, showDimensions) {
+            const room = roomsData[id];
+            if (!room) return '';
+
+            const isSelected = selectedRoomId === id;
+            let g = `<g class="interactive-room ${isSelected ? 'selected' : ''}" onclick="selectRoom('${id}')">`;
+
+            // Draw Block
+            g += `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${room.fill}" stroke="#6B7A74" stroke-width="1.5" />`;
+
+            // Furniture Details
+            if (showFurniture) {
+                if (id === 'main_stue') {
+                    g += `<g transform="translate(${x + w - 40}, ${y + 20})"><circle cx="15" cy="15" r="14" fill="#343E38" /><circle cx="15" cy="15" r="8" fill="#E8D0C5" /><text x="15" y="19" font-size="10" fill="#C07A63" text-anchor="middle">🔥</text></g>
+                          <rect x="${x + 20}" y="${y + 120}" width="110" height="70" rx="8" fill="#D4C4B0" stroke="#B0A08B"/>
+                          <rect x="${x + 30}" y="${y + 130}" width="90" height="50" rx="4" fill="#E8D8C4"/>`;
+                } else if (id === 'main_kokken') {
+                    g += `<rect x="${x + 30}" y="${y + 30}" width="120" height="45" rx="4" fill="#FFFFFF" stroke="#CBB499" stroke-width="1.5"/>
+                          <circle cx="${x + 50}" cy="${y + 52}" r="6" fill="#343E38"/><circle cx="${x + 70}" cy="${y + 52}" r="6" fill="#343E38"/>
+                          <rect x="${x + 35}" y="${y + 110}" width="110" height="55" rx="6" fill="#CBB499"/>
+                          <rect x="${x + 45}" y="${y + 98}" width="20" height="8" rx="2" fill="#8C7A6B"/><rect x="${x + 80}" y="${y + 98}" width="20" height="8" rx="2" fill="#8C7A6B"/>
+                          <rect x="${x + 45}" y="${y + 170}" width="20" height="8" rx="2" fill="#8C7A6B"/><rect x="${x + 80}" y="${y + 170}" width="20" height="8" rx="2" fill="#8C7A6B"/>`;
+                } else if (id === 'main_master_bed') {
+                    g += `<rect x="${x + 20}" y="${y + 15}" width="70" height="55" rx="4" fill="#FFFFFF" stroke="#7A8F78" stroke-width="1.5"/>
+                          <rect x="${x + 25}" y="${y + 20}" width="28" height="15" rx="2" fill="#DCE4D8"/><rect x="${x + 57}" y="${y + 20}" width="28" height="15" rx="2" fill="#DCE4D8"/>`;
+                } else if (id === 'main_bed2') {
+                    g += `<rect x="${x + 15}" y="${y + 15}" width="50" height="45" rx="4" fill="#FFFFFF" stroke="#7A8F78" stroke-width="1.5"/>
+                          <rect x="${x + 20}" y="${y + 18}" width="40" height="15" rx="2" fill="#DCE4D8"/>`;
+                } else if (id === 'main_bed3') {
+                    g += `<rect x="${x + 15}" y="${y + 20}" width="60" height="50" rx="4" fill="#FFFFFF" stroke="#7A8F78" stroke-width="1.5"/>
+                          <rect x="${x + 20}" y="${y + 23}" width="22" height="15" rx="2" fill="#DCE4D8"/><rect x="${x + 48}" y="${y + 23}" width="22" height="15" rx="2" fill="#DCE4D8"/>`;
+                } else if (id === 'annex_room1' || id === 'annex_room2') {
+                    g += `<rect x="${x + 15}" y="${y + 10}" width="50" height="45" rx="4" fill="#FFFFFF" stroke="#7A8F78" stroke-width="1.5"/>
+                          <rect x="${x + 18}" y="${y + 13}" width="20" height="12" rx="2" fill="#DCE4D8"/><rect x="${x + 41}" y="${y + 13}" width="20" height="12" rx="2" fill="#DCE4D8"/>`;
+                } else if (id === 'annex_shower') {
+                    g += `<circle cx="${x + w/2}" cy="${y + h/2}" r="3" fill="#5B7285"/>
+                          <line x1="${x + w/2}" y1="${y}" x2="${x + w/2}" y2="${y + 6}" stroke="#5B7285" stroke-width="2"/>`;
+                } else if (id === 'annex_firewood') {
+                    g += `<circle cx="${x + 15}" cy="${y + 15}" r="4" fill="#8C7A6B"/>
+                          <circle cx="${x + 25}" cy="${y + 15}" r="4" fill="#8C7A6B"/>
+                          <circle cx="${x + 20}" cy="${y + 8}" r="4" fill="#8C7A6B"/>`;
+                } else if (id === 'main_master_bath') {
+                    g += `<rect x="${x + 15}" y="${y + 15}" width="40" height="40" rx="10" fill="#FFFFFF" stroke="#5B7285" stroke-width="1.5"/>
+                          <circle cx="${x + 25}" cy="${y + 25}" r="3" fill="#5B7285"/>`;
+                }
+            }
+
+            // Labels
+            if (showLabels) {
+                const labelY = y + h/2 - (showDimensions ? 6 : 0);
+                g += `<text x="${x + w/2}" y="${labelY}" font-size="11" font-weight="600" fill="#343E38" text-anchor="middle" pointer-events="none">${room.name}</text>`;
+            }
+
+            if (showDimensions) {
+                const dimY = y + h/2 + (showLabels ? 10 : 0);
+                g += `<text x="${x + w/2}" y="${dimY}" font-size="9" font-weight="500" fill="#6B7A74" text-anchor="middle" pointer-events="none">${room.area}</text>`;
+            }
+
+            g += `</g>`;
+            return g;
+        }
+
+        function selectRoom(id) {
+            selectedRoomId = id;
+            renderSVG();
+            const room = roomsData[id];
+            if (!room) return;
+
+            document.getElementById('drawer-title').innerText = room.name;
+            document.getElementById('drawer-subtitle').innerText = `${room.building} • ${room.area}`;
+            document.getElementById('drawer-desc').innerText = room.desc;
+            document.getElementById('drawer-capacity').innerText = room.capacity;
+            document.getElementById('drawer-area').innerText = room.area;
+            document.getElementById('drawer-tips').innerText = room.tips;
+
+            const iconBg = document.getElementById('drawer-icon-bg');
+            const icon = document.getElementById('drawer-icon');
+            iconBg.style.backgroundColor = room.fill;
+            icon.className = `fa-solid ${room.icon}`;
+
+            const featuresContainer = document.getElementById('drawer-features');
+            featuresContainer.innerHTML = '';
+            room.features.forEach(feat => {
+                const li = document.createElement('li');
+                li.className = 'flex items-center space-x-2';
+                li.innerHTML = `<i class="fa-solid fa-check text-nordic-sageDark text-[10px]"></i> <span>${feat}</span>`;
+                featuresContainer.appendChild(li);
+            });
+
+            document.getElementById('room-drawer').classList.remove('translate-x-full');
+        }
+
+        function closeDrawer() {
+            document.getElementById('room-drawer').classList.add('translate-x-full');
+            selectedRoomId = null;
+            renderSVG();
+        }
+
+        function applyTransform() {
+            document.getElementById('svg-viewport').style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+        }
+
+        function zoomIn() { scale = Math.min(scale * 1.25, 4); applyTransform(); }
+        function zoomOut() { scale = Math.max(scale / 1.25, 0.75); applyTransform(); }
+        function resetZoom() { 
+            scale = 1; 
+            translateX = 0; 
+            translateY = 0; 
+            applyTransform(); 
+        }
+
+        const container = document.getElementById('canvas-container');
+
+        container.addEventListener('mousedown', (e) => {
+            if (e.target.closest('.interactive-room')) return;
+            isDragging = true;
+            startX = e.clientX - translateX;
+            startY = e.clientY - translateY;
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            translateX = e.clientX - startX;
+            translateY = e.clientY - startY;
+            applyTransform();
+        });
+
+        window.addEventListener('mouseup', () => { isDragging = false; });
+        
+        container.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 1) {
+                isDragging = true;
+                startX = e.touches[0].clientX - translateX;
+                startY = e.touches[0].clientY - translateY;
+            }
+        });
+        
+        container.addEventListener('touchmove', (e) => {
+            if (isDragging && e.touches.length === 1) {
+                translateX = e.touches[0].clientX - startX;
+                translateY = e.touches[0].clientY - startY;
+                applyTransform();
+            }
+        });
+        
+        container.addEventListener('touchend', () => { isDragging = false; });
+        
+        container.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            scale = Math.min(Math.max(scale * (e.deltaY < 0 ? 1.1 : 0.9), 0.75), 4);
+            applyTransform();
+        }, { passive: false });
+
+        window.onload = function() {
+            renderSVG();
+            applyTransform();
+        };
+    </script>
+</body>
+</html>
