@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Gyvelbakken 10 — Guest Hub</title>
+  <link rel="icon" type="image/jpeg" href="favicon.JPG" />
+  <style>
+    :root {
+      --bg-color: #f8f9fa;
+      --card-bg: #ffffff;
+      --text-main: #212529;
+      --text-muted: #6c757d;
+      --accent-color: #2b4c3f; /* Forest / Nordic Green */
+      --accent-light: #e8f0ec;
+      --border-color: #e9ecef;
+      --shadow-sm: 0 2px 4px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+      --radius: 12px;
+      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-family);
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding-bottom: 60px;
+    }
+
+    header {
+      position: relative;
+      background-image: url('assets/images/hero-exterior.JPG');
+      background-size: cover;
+      background-position: center center;
+      width: 100%;
+      aspect-ratio: 12 / 5;
+      max-height: 500px;
+      min-height: 220px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      padding-top: max(40px, 6%);
+      align-items: center;
+      text-align: center;
+      color: white;
+      border-bottom: 4px solid var(--accent-color);
+    }
+    header h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+    }
+    header p {
+      font-size: 1.05rem;
+      font-weight: 500;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px 20px;
+      display: flex;
+      gap: 32px;
+    }
+
+    .sidebar {
+      flex: 0 0 260px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .main-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .nav-group {
+      background-color: var(--bg-color);
+      border-radius: 8px;
+    }
+
+    .accordion-btn {
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: none;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      font-weight: 600;
+      padding: 12px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+    .accordion-btn:hover {
+      background-color: var(--accent-light);
+      color: var(--accent-color);
+    }
+    .accordion-btn.active {
+      color: var(--accent-color);
+    }
+    
+    .chevron {
+      transition: transform 0.3s ease;
+    }
+    .accordion-btn.active .chevron {
+      transform: rotate(180deg);
+    }
+
+    .accordion-content {
+      display: none;
+      padding: 0 4px 8px 4px;
+    }
+    .accordion-content.active {
+      display: block;
+    }
+
+    .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .tab-btn {
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: none;
+      padding: 10px 12px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-main);
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+    }
+    .tab-btn:hover {
+      background-color: var(--accent-light);
+    }
+    .tab-btn.active {
+      color: var(--accent-color);
+      font-weight: 600;
+      background-color: var(--accent-light);
+      position: relative;
+    }
+    .tab-btn.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 10%;
+      height: 80%;
+      width: 4px;
+      background-color: var(--accent-color);
+      border-radius: 4px;
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .card {
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      border: 1px solid var(--border-color);
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+    .card h2 {
+      font-size: 1.4rem;
+      color: var(--accent-color);
+      margin-bottom: 16px;
+      border-bottom: 2px solid var(--accent-light);
+      padding-bottom: 8px;
+    }
+    .card h3 {
+      font-size: 1.1rem;
+      margin: 20px 0 8px 0;
+      color: var(--text-main);
+    }
+    .card p, .card ul {
+      color: var(--text-main);
+      font-size: 0.95rem;
+    }
+    .card ul {
+      list-style-type: disc;
+      padding-left: 20px;
+    }
+    .card li { margin-bottom: 8px; }
+
+    .drive-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--accent-light);
+      color: var(--accent-color);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+      padding: 10px 16px;
+      border-radius: 8px;
+      margin-top: 16px;
+      transition: background 0.2s ease;
+    }
+    .drive-link:hover {
+      background-color: #d8e6df;
+    }
+
+    .checklist { list-style: none !important; padding-left: 0 !important; }
+    .checklist li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--accent-color);
+      cursor: pointer;
+    }
+    .checklist label {
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .layout-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .room-card {
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--bg-color);
+    }
+    .room-img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      display: block;
+    }
+    .room-info { padding: 12px; }
+    .room-info h4 { font-size: 1rem; margin-bottom: 4px; }
+    .room-info p { font-size: 0.85rem; color: var(--text-muted); margin: 0; }
+
+    footer {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: 40px;
+      padding: 20px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        padding: 16px;
+      }
+      .sidebar {
+        flex: none;
+        width: 100%;
+        margin-bottom: 16px;
+      }
+      .nav-group {
+        border: 1px solid var(--border-color);
+        margin-bottom: 8px;
+      }
+      .tab-btn {
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Gyvelbakken 10</h1>
+    <p>Veddinge Bakker, 4550 Asnæs</p>
+  </header>
+
+  <div class="container">
+    
+    <div class="sidebar">
+        
+        <div class="nav-group">
+          <button class="accordion-btn active" onclick="toggleAccordion(this)">
+            Arrival 
+            <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="accordion-content active">
+            <ul class="nav-list">
+              <li><button class="tab-btn active" onclick="switchTab(event, 'getting-here')">📍 Getting Here</button></li>
+              <li><button class="tab-btn" onclick="switchTab(event, 'parking')">🅿️ Parking</button></li>
+              <li><button class="tab-btn" onclick="switchTab(event, 'keys')">🔑 Keys & Door Codes</button></li>
+              <li><button class="tab-btn" onclick="switchTab(event, 'wifi')">📶 Wi-Fi & Internet</button></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <button class="accordion-btn" onclick="toggleAccordion(this)">
+            The House 
+            <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="accordion-content">
+            <ul class="nav-list">
+              <li><button class="tab-btn" onclick="switchTab(event, 'layouts')">🏠 Property Layout</button></li>
+              <li><button class="tab-btn" onclick="switchTab(event, 'operations')">⚙️ House Operations</button></li>
+              <li><button class="tab-btn" onclick="switchTab(event, 'waste')">♻️ Waste Sorting</button></li>
+              <li><button class="tab-btn" onclick="switchTab(event, 'supplies')">🧻 Supplies</button></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <button class="accordion-btn" onclick="toggleAccordion(this)">
+            Amenities 
+            <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="accordion-content">
+            <ul class="nav-list">
+              <li><button class="tab-btn" onclick="switchTab(event, 'espresso')">☕ Espresso Machine</button></li>
+              <li><button class="tab-btn" onclick="switchTab(event, 'fireplace')">🪵 Fireplace</button></li>
+              <li><button class="tab-btn" onclick="switchTab(event, 'sauna')">🧘 Sauna</button></li>
+              <li><button class="tab-btn" onclick="switchTab(event, 'tv')">📺 TV & Media</button></li>
+              <li><button class="tab-btn" onclick="switchTab(event, 'laundry')">🧺 Laundry</button></li>
+              <li><button class="tab-btn" onclick="switchTab(event, 'ev')">⚡ EV Charger</button></li>
+              <li><button class="tab-btn" onclick="switchTab(event, 'housecleaning')">🧹 Housecleaning</button></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <button class="accordion-btn" onclick="toggleAccordion(this)">
+            The Neighborhood 
+            <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="accordion-content">
+            <ul class="nav-list">
+              <li><button class="tab-btn" onclick="switchTab(event, 'groceries')">🛒 Groceries & Farm Stands</button></li>
+              <li><button class="tab-btn" onclick="switchTab(event, 'beaches')">🌊 Beaches</button></li>
+              <li><button class="tab-btn" onclick="switchTab(event, 'attractions')">🎢 Attractions</button></li>
+              <li><button class="tab-btn" onclick="switchTab(event, 'community')">🏡 Community Rules</button></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <button class="accordion-btn" onclick="toggleAccordion(this)">
+            Departure 
+            <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="accordion-content">
+            <ul class="nav-list">
+              <li><button class="tab-btn" onclick="switchTab(event, 'checkout')">✅ Check-Out Checklist</button></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <button class="accordion-btn" onclick="toggleAccordion(this)">
+            Support 
+            <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div class="accordion-content">
+            <ul class="nav-list">
+              <li><button class="tab-btn" onclick="switchTab(event, 'faq')">❓ FAQ</button></li>
+              <li><button class="tab-btn" onclick="switchTab(event, 'report')">⚠️ Report a Problem</button></li>
+              <li><button class="tab-btn" onclick="switchTab(event, 'contact')">📞 Contact Us</button></li>
+              <li><button class="tab-btn" onclick="switchTab(event, 'emergencies')">🚨 Emergencies</button></li>
+            </ul>
+          </div>
+        </div>
+    </div>
+
+    <main class="main-content">
+
+        <!-- TAB: GETTING HERE -->
+        <div id="getting-here" class="tab-content active">
+          <div class="card">
+            <h2>Getting Here</h2>
+            <p><strong>Address:</strong> Gyvelbakken 10, Veddinge Bakker, 4550 Asnæs</p>
+            
+            <h3>Driving & Navigation</h3>
+            <p>Veddinge Bakker is known for its steep, winding roads. Please follow the posted speed limits. During the snowy season, note that only the route to Gyvelbakken via Ringbakken is plowed.</p>
+
+            <h3 style="margin-top: 24px;">Public Transport</h3>
+            <ul>
+              <li><strong>Train:</strong> Take the regional train from Copenhagen Central Station to Holbæk. In Holbæk, transfer to the local train (Lokaltog 510R) heading towards Nykøbing Sjælland. You can get off at either <strong>Asnæs Station</strong> or <strong>Fårevejle Station</strong>.</li>
+              <li><strong>Bus:</strong> From Asnæs or Fårevejle station, you can take <strong>Bus 568</strong> to Klintebakken (Strandgårdsvej), which takes about 32 min. and runs once an hour. The walk from the bus stop to the house takes about 10 min.
+Note that some of the hills are steep, and the bus only runs once an hour, so if you take the train, you should probably plan on getting a ride from someone between the train station and the house.
+            </ul>
+
+            <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+              <a href="https://maps.google.com/?q=Gyvelbakken+10,+4550+Asnæs" target="_blank" rel="noopener" class="drive-link">
+                🗺️ Open in Google Maps
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: PARKING -->
+        <div id="parking" class="tab-content">
+          <div class="card">
+            <h2>Parking</h2>
+            <p>Proper parking is essential in Veddinge Bakker to ensure emergency vehicles and neighbors can always pass on the narrow roads.</p>
+            <ul>
+              <li><strong>Driveway Capacity:</strong> There is space for 2-3 cars to park in our driveway, marked 1 on the map.</li>
+              <li><strong>Additional Parking:</strong> If you need additional parking space, you can use the area on the grass marked 2 on the map</li>
+              <li><strong>Do Not Block the Road:</strong> Never leave cars parked out on the main road (Gyvelbakken).</li>
+            </ul>
+            <img src="assets/images/parking-map.JPG" alt="Parking Map" style="width: 100%; max-width: 600px; height: auto; border-radius: 8px; margin-top: 16px; border: 1px solid var(--border-color);">
+          </div>
+        </div>
+
+        <!-- TAB: KEYS & DOOR CODES -->
+        <div id="keys" class="tab-content">
+          <div class="card">
+            <h2>Keys & Door Codes</h2>
+            <p>Access to the main house and annex is managed via digital keypads.</p>
+            
+            <h3>Main House</h3>
+            <p>Enter the code below on the front door keypad. You have to press the star key before and after the numeric code.</p>
+            <div style="background:var(--accent-light); padding:16px; border-radius:8px; font-family:monospace; font-size:1.5rem; letter-spacing:4px; text-align:center; font-weight:bold; margin: 8px 0 16px 0;">
+              *[placeholder]*
+            </div>
+            <p>If the battery is dead, you can either jumpstart it using a 9V battery or entering through the keyed lock on the rear door between the living room and the terrace. The key for that door is in the lockbox around the corner from that door, with code [placeholder].</p>
+
+            <h3>Annex</h3>
+            <p>Use this secondary code for the Annex Bedrooms and Laundry Room.</p>
+            <div style="background:var(--accent-light); padding:16px; border-radius:8px; font-family:monospace; font-size:1.5rem; letter-spacing:4px; text-align:center; font-weight:bold; margin: 8px 0 16px 0;">
+              *[placeholder]*
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: WIFI -->
+        <div id="wifi" class="tab-content">
+          <div class="card">
+            <h2>Wi-Fi & Internet</h2>
+            <p>The base station is next to the circuit breaker panel in the entry way, and we have two range extender hubs at different points in the main house.</p>
+            
+            <div style="margin-top: 16px; display:flex; flex-direction:column; gap:12px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-color); padding:12px; border-radius:8px; border:1px solid var(--border-color);">
+                <div>
+                  <span style="font-size:0.8rem; color:var(--text-muted); text-transform:uppercase;">Network Name (SSID)</span><br>
+                  <strong id="wifi-ssid" style="font-size:1.1rem;">solhavudsigt</strong>
+                </div>
+                <button onclick="copyText('wifi-ssid')" style="padding:6px 12px; border-radius:6px; border:1px solid var(--border-color); cursor:pointer;">Copy</button>
+              </div>
+
+              <div style="display:flex; justify-content:space-between; align-items:center; background:var(--bg-color); padding:12px; border-radius:8px; border:1px solid var(--border-color);">
+                <div>
+                  <span style="font-size:0.8rem; color:var(--text-muted); text-transform:uppercase;">Password</span><br>
+                  <strong id="wifi-pass" style="font-size:1.1rem;">gyvelbakken10</strong>
+                </div>
+                <button onclick="copyText('wifi-pass')" style="padding:6px 12px; border-radius:6px; border:1px solid var(--border-color); cursor:pointer;">Copy</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: PROPERTY LAYOUT -->
+        <div id="layouts" class="tab-content">
+          <div class="card">
+            <h2>Property Layout</h2>
+            <p>The property consists of a main house and a separate annex building.</p>
+
+            <h3>Main House</h3>
+            <div class="layout-grid">
+              <div class="room-card">
+                <img src="assets/images/primary-bedroom.JPG" alt="Primary Bedroom" class="room-img" onerror="this.src='https://placehold.co/400x300/e8f0ec/2b4c3f?text=Primary+Bedroom'">
+                <div class="room-info">
+                  <h4>Primary Bedroom</h4>
+                  <p>Two adjacent single beds (190cm x 90cm each).</p>
+                </div>
+              </div>
+              <div class="room-card">
+                <img src="assets/images/guest-room-1.JPG" alt="Guest Bedroom 1" class="room-img" onerror="this.src='https://placehold.co/400x300/e8f0ec/2b4c3f?text=Guest+Room+1'">
+                <div class="room-info">
+                  <h4>Guest Bedroom 1</h4>
+                  <p>Two adjacent single beds (190cm x 90cm each).</p>
+                </div>
+              </div>
+              <div class="room-card">
+                <img src="assets/images/guest-room-2.JPG" alt="Guest Bedroom 2" class="room-img" onerror="this.src='https://placehold.co/400x300/e8f0ec/2b4c3f?text=Guest+Room+2'">
+                <div class="room-info">
+                  <h4>Guest Bedroom 2</h4>
+                  <p>Single bed with desk area.</p>
+                </div>
+              </div>
+              <div class="room-card">
+                <img src="assets/images/primary-bathroom.JPG" alt="Primary Bathroom" class="room-img" onerror="this.src='https://placehold.co/400x300/e8f0ec/2b4c3f?text=Primary+Bathroom'">
+                <div class="room-info">
+                  <h4>Primary Bathroom</h4>
+                  <p>Main bathroom with shower and bathtub.</p>
+                </div>
+              </div>
+              <div class="room-card">
+                <img src="assets/images/guest-bathroom.JPG" alt="Guest Bathroom" class="room-img" onerror="this.src='https://placehold.co/400x300/e8f0ec/2b4c3f?text=Guest+Bathroom'">
+                <div class="room-info">
+                  <h4>Guest Bathroom</h4>
+                  <p>WC and shower.</p>
+                </div>
+              </div>
+              <div class="room-card">
+                <img src="assets/images/living-room-1.JPG" alt="Living Area" class="room-img" onerror="this.src='https://placehold.co/400x300/e8f0ec/2b4c3f?text=Living+Area'">
+                <div class="room-info">
+                  <h4>Living Room</h4>
+                  <p>Comfortable seating and fireplace.</p>
+                </div>
+              </div>
+              <div class="room-card">
+                <img src="assets/images/living-room-2.JPG" alt="Living Room" class="room-img" onerror="this.src='https://placehold.co/400x300/e8f0ec/2b4c3f?text=Living+Room'">
+                <div class="room-info">
+                  <h4>Living Room</h4>
+                  <p>Smart TV and SONOS audio system.</p>
+                </div>
+              </div>
+              <div class="room-card">
+                <img src="assets/images/dining-room-1.JPG" alt="Dining Area" class="room-img" onerror="this.src='https://placehold.co/400x300/e8f0ec/2b4c3f?text=Dining+Area'">
+                <div class="room-info">
+                  <h4>Dining Area</h4>
+                  <p>Table seating up to 8.</p>
+                </div>
+              </div>
+              <div class="room-card">
+                <img src="assets/images/kitchen-1.JPG" alt="Kitchen" class="room-img" onerror="this.src='https://placehold.co/400x300/e8f0ec/2b4c3f?text=Kitchen'">
+                <div class="room-info">
+                  <h4>Kitchen</h4>
+                  <p>Fully equipped open kitchen.</p>
+                </div>
+              </div>
+              <div class="room-card">
+                <img src="assets/images/sauna.JPG" alt="Sauna" class="room-img" onerror="this.src='https://placehold.co/400x300/e8f0ec/2b4c3f?text=Sauna'">
+                <div class="room-info">
+                  <h4>Sauna</h4>
+                  <p>Indoor electric sauna.</p>
+                </div>
+              </div>
+              <div class="room-card">
+                <img src="assets/images/terrace-1.JPG" alt="Terrace" class="room-img" onerror="this.src='https://placehold.co/400x300/e8f0ec/2b4c3f?text=Terrace'">
+                <div class="room-info">
+                  <h4>Terrace</h4>
+                  <p>Outdoor dining and lounge area.</p>
+                </div>
+              </div>
+            </div>
+
+            <h3 style="margin-top: 32px;">Annex</h3>
+            <div class="layout-grid">
+              <div class="room-card">
+                <img src="assets/images/annex bedroom 1.JPG" alt="Annex Bedroom 1" class="room-img" onerror="this.src='https://placehold.co/400x300/e8f0ec/2b4c3f?text=Annex+Bedroom+1'">
+                <div class="room-info">
+                  <h4>Bedroom 1</h4>
+                  <p>Double bed.</p>
+                </div>
+              </div>
+              <div class="room-card">
+                <img src="assets/images/annex bedroom 2.JPG" alt="Annex Bedroom 2" class="room-img" onerror="this.src='https://placehold.co/400x300/e8f0ec/2b4c3f?text=Annex+Bedroom+2'">
+                <div class="room-info">
+                  <h4>Bedroom 2</h4>
+                  <p>Double bed.</p>
+                </div>
+              </div>
+              <div class="room-card">
+                <img src="assets/images/laundry-room.JPG" alt="Laundry Room" class="room-img" onerror="this.src='https://placehold.co/400x300/e8f0ec/2b4c3f?text=Laundry+Room'">
+                <div class="room-info">
+                  <h4>Laundry Room</h4>
+                  <p>Washer and dryer facilities.</p>
+                </div>
+              </div>
+              <div class="room-card">
+                <img src="assets/images/annex-bathroom.JPG" alt="Annex Bathroom" class="room-img" onerror="this.src='https://placehold.co/400x300/e8f0ec/2b4c3f?text=Annex+Bathroom'">
+                <div class="room-info">
+                  <h4>Bathroom</h4>
+                  <p>WC and shower.</p>
+                </div>
+              </div>
+              <div class="room-card">
+                <img src="assets/images/outdoor-shower.JPG" alt="Outdoor Shower" class="room-img" onerror="this.src='https://placehold.co/400x300/e8f0ec/2b4c3f?text=Outdoor+Shower'">
+                <div class="room-info">
+                  <h4>Outdoor Shower</h4>
+                  <p>Perfect for rinsing off after a trip to the beach.</p>
+                </div>
+              </div>
+            </div>
+
+            <a href="property_layout_diagram.html" target="_blank" class="drive-link" style="margin-top: 24px;">
+              🗺️ Open Interactive Property Map
+            </a>
+          </div>
+        </div>
+
+        <!-- TAB: HOUSE OPERATIONS -->
+        <div id="operations" class="tab-content">
+          <div class="card">
+            <h2>House Operations</h2>
+            <ul>
+              <li>[Floor Heating placeholder information]</li>
+              <li>[Air Conditioning placeholder information]</li>
+              <li>[Water Heaters placeholder information]</li>
+              <li>[Freezing Weather Procedures placeholder information]</li>
+            </ul>
+
+            <a href="https://drive.google.com/drive/folders/11cWqMxmWwzIPQWGLyT_0JNxGGNY32VSV?usp=drive_link" target="_blank" rel="noopener" class="drive-link">
+              📄 Download Appliance Manuals
+            </a>
+          </div>
+        </div>
+
+        <!-- TAB: WASTE SORTING -->
+        <div id="waste" class="tab-content">
+          <div class="card">
+            <h2>Waste Sorting</h2>
+            <p>Odsherred Kommune has strict sorting rules. Please separate garbage into the designated bins outside the property.</p>
+            <p style="margin-top: 12px;">Under the kitchen sink, we put general waste (restaffald) in the front bin and food waste (madaffald) in the rear bin. <strong>Note:</strong> Odsherred Kommune does not require special bag types for food waste; just use the same ones as for general waste.</p>
+            
+            <img src="assets/images/waste-bins.JPG" alt="Waste Bins" style="width: 100%; max-width: 600px; height: auto; border-radius: 8px; margin-top: 20px; border: 1px solid var(--border-color); display: block;">
+
+            <a href="https://www.odsherred.dk/da/bo-og-leve/affald-og-en-groen-hverdag/affald-og-genbrug/dit-affald/" target="_blank" rel="noopener" class="drive-link" style="margin-top: 20px;">
+              🌐 Odsherred Waste Sorting Information
+            </a>
+          </div>
+        </div>
+
+        <!-- TAB: SUPPLIES -->
+        <div id="supplies" class="tab-content">
+          <div class="card">
+            <h2>Supplies</h2>
+            <p>We aim to keep the house stocked with basics, including:</p>
+            <ul style="margin-bottom: 16px;">
+              <li>Toilet Paper</li>
+              <li>Paper Towels</li>
+              <li>Trash Bags for bins under kitchen sink</li>
+              <li>Bin liners for VIPP pedal bins</li>
+              <li>Coffee Beans</li>
+              <li>Firewood</li>
+              <li>Pantry Basics</li>
+              <li>USB phone chargers</li>
+              <li>Sodastream</li>
+            </ul>
+            <p>Most of these are in the pantry, but you can find additional supplies in the master bedroom closet.</p>
+            <p style="margin-top: 8px;">If you use the last of something, please try to replace it or let us know.</p>
+          </div>
+        </div>
+
+        <!-- TAB: ESPRESSO MACHINE -->
+        <div id="espresso" class="tab-content">
+          <div class="card">
+            <h2>Espresso Machine</h2>
+            <p>You are welcome to use the Sage Breville BES980 espresso machine.</p>
+            <ul>
+              <li><strong>Manual:</strong> If you are not familiar with this type of espresso machine, please consult the manual, which is available in the <a href="https://drive.google.com/drive/folders/11cWqMxmWwzIPQWGLyT_0JNxGGNY32VSV?usp=drive_link" target="_blank" rel="noopener" style="color:var(--accent-color); text-decoration:underline;">house manuals folder</a>.</li>
+              <li><strong>Water Tank:</strong> Refill the tank using bottled water rather than tap water. If you run out of bottled water, look for kildevand (uden brus) brands such as Aqua d'Or, Egekilde, or Denice.</li>
+              <li><strong>Steamer:</strong> Remember to wipe the steam wand with a damp cloth after frothing milk.</li>
+              <li><strong>Maintenance:</strong> If the machine indicates it needs descaling, a new filter, etc., please provide the necessary service using the supplies in the pantry.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- TAB: FIREPLACE -->
+        <div id="fireplace" class="tab-content">
+          <div class="card">
+            <h2>Fireplace</h2>
+            <ul>
+              <li><strong>Lighting:</strong> [placeholder]</li>
+              <li><strong>Firewood:</strong> [placeholder]</li>
+              <li><strong>Ash removal:</strong> [placeholder]</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- TAB: SAUNA -->
+        <div id="sauna" class="tab-content">
+          <div class="card">
+            <h2>Sauna</h2>
+            <p>[placeholder]</p>
+          </div>
+        </div>
+
+        <!-- TAB: TV & MEDIA -->
+        <div id="tv" class="tab-content">
+          <div class="card">
+            <h2>TV & Media</h2>
+            <p>The living room is equipped with a Sony Smart TV and a SONOS Playbar.</p>
+            <ul>
+              <li><strong>Streaming:</strong> Use the Sony remote to access apps like Netflix, DRTV, etc. You may need to log into your own accounts.</li>
+              <li><strong>TV:</strong> <a href="https://www.allente.dk/parabol/allente-basic/" target="_blank" rel="noopener" style="color:var(--accent-color); text-decoration:underline;">Allente Basic</a></li>
+            </ul>
+            <a href="https://drive.google.com/drive/folders/11cWqMxmWwzIPQWGLyT_0JNxGGNY32VSV?usp=drive_link" target="_blank" rel="noopener" class="drive-link">
+              📄 Download Appliance Manuals
+            </a>
+          </div>
+        </div>
+        
+        <!-- TAB: LAUNDRY -->
+        <div id="laundry" class="tab-content">
+          <div class="card">
+            <h2>Laundry</h2>
+            <p>The washing machine and dryer in the Annex Laundry Room are available for your use. There is an additional washing machine in the entry area of the main house.</p>
+            <p style="margin-top: 12px;">Please use Eco Cycles or air dry your clothes to save energy when possible.</p>
+          </div>
+        </div>
+
+        <!-- TAB: EV CHARGER -->
+        <div id="ev" class="tab-content">
+          <div class="card">
+            <h2>EV Charger</h2>
+            <p>A Clever wallbox is available for charging electric vehicles.</p>
+            <ul>
+              <li><strong>Connector:</strong> Type 2 standard cable.</li>
+              <li><strong>Activation:</strong> Requires RFID tag or app.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- TAB: HOUSECLEANING -->
+        <div id="housecleaning" class="tab-content">
+          <div class="card">
+            <h2>Housecleaning</h2>
+            <p>To keep the summer house pleasant for everyone, please maintain a basic level of tidiness.</p>
+            <ul>
+              <li><strong>Supplies:</strong> Broom, vacuum, and cleaning products are in the utility closet.</li>
+              <li><strong>Dishwasher:</strong> Please only run the dishwasher when full, using the eco setting.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- TAB: GROCERIES -->
+        <div id="groceries" class="tab-content">
+          <div class="card">
+            <h2>Groceries & Farm Stands</h2>
+            
+            <h3>Asnæs Centret (9 min. drive)</h3>
+            <ul>
+              <li><strong>SuperBrugsen:</strong> Large selection, bakery, and butcher.</li>
+              <li><strong>Netto:</strong> basic selection, open later.</li>
+            </ul>
+
+            <h3 style="margin-top: 16px;">Local Farm Stands</h3>
+            <ul>
+              <li>Keep an eye out for roadside stands selling fresh strawberries, potatoes, and other produce. (Use MobilePay or cash).</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- TAB: BEACHES -->
+        <div id="beaches" class="tab-content">
+          <div class="card">
+            <h2>Beaches</h2>
+            <p>Odsherred offers some of the best coastline in Denmark.</p>
+            <ul>
+              <li><strong>Veddinge Strand:</strong> The closest beach, a 5 min. walk down the hill; entrance at the corner of Gyvelbakken and Lerbakken. Pebbly and sandy areas, great for a quick dip or evening walk.</li>
+              <li><strong>Høve Strand:</strong> Sandy beach surrounded by pine forest. (10 min. drive)</li>
+              <li><strong>Gudmindrup Strand:</strong> Beautiful wide sandy beach with shallow water, excellent for children. (20 min. drive)</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- TAB: ATTRACTIONS -->
+        <div id="attractions" class="tab-content">
+          <div class="card">
+            <h2>Attractions</h2>
+            <ul style="margin-bottom: 8px;">
+              <li>Lillero</li>
+              <li>Haveje</li>
+              <li>Strandlyst Street Food</li>
+              <li>Asnæs Swimming Pool</li>
+              <li>Dragsholm Slot</li>
+              <li>Tír Bakery</li>
+              <li>And more...</li>
+            </ul>
+            
+            <a href="https://www.visitodsherred.com/" target="_blank" rel="noopener" class="drive-link" style="margin-bottom: 24px;">
+              🌐 Discover more at Visit Odsherred
+            </a>
+
+            <img src="assets/images/Solvognen.gif" alt="Solvognen Animation" style="width: 100%; max-width: 400px; height: auto; border-radius: 8px; display: block; border: 1px solid var(--border-color);">
+          </div>
+        </div>
+
+        <!-- TAB: COMMUNITY RULES -->
+        <div id="community" class="tab-content">
+          <div class="card">
+            <h2>Community Rules</h2>
+            <p>Gyvelbakken 10 is part of <strong>Strandgaardens Grundejerforening</strong>. To maintain good relationships with our neighbors, please adhere to community standards. Please review the guidelines on the association website re: quiet hours, outdoor fires, speed limit, parking, road safety, and beach etiquette before you arrive.</p>
+            
+            <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+              <a href="https://www.strandgaardens.dk/ordensregler" target="_blank" rel="noopener" class="drive-link">
+                📋 Association Guidelines
+              </a>
+              <a href="http://www.strandgaardens.dk" target="_blank" rel="noopener" class="drive-link">
+                🌐 Visit Strandgaardens Grundejerforening
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: CHECKOUT -->
+        <div id="checkout" class="tab-content">
+          <div class="card">
+            <h2>Check-Out Checklist</h2>
+            <p><em>[This section is currently under construction. Please check back later for details.]</em></p>
+          </div>
+        </div>
+
+        <!-- TAB: REPORT A PROBLEM -->
+        <div id="report" class="tab-content">
+          <div class="card">
+            <h2>Report a Problem</h2>
+            <p>Accidents happen, and things break! Please let us know if something needs attention before the next guests arrive.</p>
+            <ul>
+              <li>Did a glass break?</li>
+              <li>Are we out of coffee beans or firewood?</li>
+              <li>Is an appliance acting up?</li>
+            </ul>
+            <p>Send a quick message to Serge or Kirstine so we can restock or repair it.</p>
+          </div>
+        </div>
+
+        <!-- TAB: FAQ -->
+        <div id="faq" class="tab-content">
+          <div class="card">
+            <h2>FAQ</h2>
+            <h3>Are pets allowed?</h3>
+            <p>Please check with us prior to arrival regarding pets.</p>
+            
+            <h3>Is smoking permitted?</h3>
+            <p>No smoking is allowed indoors. If smoking outside, please dispose of butts properly and safely.</p>
+            
+            <h3>Can we use the firewood?</h3>
+            <p>Yes, for the indoor fireplace. Please do not use it for large outdoor bonfires.</p>
+          </div>
+        </div>
+
+        <!-- TAB: CONTACT -->
+        <div id="contact" class="tab-content">
+          <div class="card">
+            <h2>Contact Us</h2>
+            <p>If you have any questions during your stay, don't hesitate to reach out.</p>
+            <ul>
+              <li><strong>Serge:</strong> [Phone Number Placeholder]</li>
+              <li><strong>Kirstine:</strong> [Phone Number Placeholder]</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- TAB: EMERGENCIES -->
+        <div id="emergencies" class="tab-content">
+          <div class="card">
+            <h2>Emergencies</h2>
+            <ul>
+              <li><strong>Medical/Fire/Police:</strong> Call 112</li>
+              <li><strong>Police (Non-Emergency):</strong> Call 114</li>
+              <li><strong>Lægevagten (On-call Doctor):</strong> Call 1818 or +45 1818 if calling from a non-Danish SIM Cards</li>
+            </ul>
+            
+            <h3 style="margin-top: 16px;">Pharmacy</h3>
+            <ul>
+              <li><strong>Closest:</strong> Asnæs Apotek, Asnæs Centret</li>
+              <li><strong>Open later:</strong> Løve Apotek, Holbæk</li>
+            </ul>
+          </div>
+        </div>
+
+    </main>
+  </div>
+
+  <footer>
+    <p>Gyvelbakken 10 • Veddinge Bakker, 4550 Asnæs</p>
+    <p>Questions? <a href="#" onclick="switchTabByName('contact'); return false;" style="color:var(--accent-color); text-decoration:underline;">Contact Serge or Kirstine</a></p>
+    <p style="margin-top: 12px; font-size: 0.75rem; opacity: 0.8;">Last updated: July 28, 2026</p>
+  </footer>
+
+  <script>
+    function toggleAccordion(btn) {
+      const isOpening = !btn.classList.contains('active');
+      
+      // Close all accordions first to keep the menu compact
+      const allBtns = document.querySelectorAll('.accordion-btn');
+      allBtns.forEach(otherBtn => {
+        otherBtn.classList.remove('active');
+        if (otherBtn.nextElementSibling) {
+          otherBtn.nextElementSibling.classList.remove('active');
+        }
+      });
+
+      // If we were trying to open the clicked one, open it
+      if (isOpening) {
+        btn.classList.add('active');
+        if (btn.nextElementSibling) {
+          btn.nextElementSibling.classList.add('active');
+        }
+      }
+    }
+
+    function switchTab(evt, tabName) {
+      // Hide all content
+      const contents = document.querySelectorAll('.tab-content');
+      contents.forEach(c => c.classList.remove('active'));
+
+      // Remove active class from all tab buttons
+      const buttons = document.querySelectorAll('.tab-btn');
+      buttons.forEach(b => b.classList.remove('active'));
+
+      // Show the selected tab content (with null safety)
+      const targetContent = document.getElementById(tabName);
+      if (targetContent) {
+        targetContent.classList.add('active');
+      } else {
+        console.warn(`Tab content with id '${tabName}' not found.`);
+      }
+
+      // Add active class to the clicked tab button
+      if (evt && evt.currentTarget) {
+        evt.currentTarget.classList.add('active');
+      }
+      
+      // Scroll to the top of the main content area for better mobile experience
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function switchTabByName(tabName) {
+      // Find the button that controls this tab
+      const buttons = document.querySelectorAll('.tab-btn');
+      let targetBtn = null;
+      
+      buttons.forEach(btn => {
+        if (btn.getAttribute('onclick').includes(`'${tabName}'`)) {
+          targetBtn = btn;
+        }
+      });
+
+      if (targetBtn) {
+        // Automatically open the parent accordion if it's currently closed
+        const accordionContent = targetBtn.closest('.accordion-content');
+        if (accordionContent && !accordionContent.classList.contains('active')) {
+           const accordionBtn = accordionContent.previousElementSibling;
+           if (accordionBtn) {
+               // Bypass the toggle logic and forcefully open just this accordion
+               const allBtns = document.querySelectorAll('.accordion-btn');
+               allBtns.forEach(b => {
+                 b.classList.remove('active');
+                 if(b.nextElementSibling) b.nextElementSibling.classList.remove('active');
+               });
+               accordionBtn.classList.add('active');
+               accordionContent.classList.add('active');
+           }
+        }
+        targetBtn.click();
+      } else {
+        switchTab(null, tabName); // Fallback if button not found
+      }
+    }
+
+    function copyText(elementId) {
+      const text = document.getElementById(elementId).innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        alert('Copied to clipboard!');
+      }).catch(err => {
+        console.error('Failed to copy text: ', err);
+      });
+    }
+  </script>
+</body>
+</html>
