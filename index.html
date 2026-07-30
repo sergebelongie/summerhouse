@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Gyvelbakken 10 Guest Hub</title>
+  
+  <!-- Favicon with a cache buster to ensure it updates -->
+  <link rel="icon" type="image/jpeg" href="https://raw.githubusercontent.com/sergebelongie/summerhouse/main/favicon.JPG?v=2">
+
+  <!-- Google Fonts: Inter for UI, Playfair Display for headings -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      /* Nordic Minimalist Palette */
+      --bg-color: #fcfcfc; /* Off-white linen */
+      --sidebar-bg: #f5f5f5; /* Light grey */
+      --text-main: #2c2c2c; /* Deep charcoal */
+      --text-muted: #666666;
+      --accent-color: #4a5d4e; /* Muted sage/forest for subtle highlights */
+      --border-color: #e0e0e0;
+      
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --font-heading: 'Playfair Display', Georgia, serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: var(--font-body);
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: var(--font-heading);
+      font-weight: 400;
+      color: var(--text-main);
+    }
+
+    header {
+      position: relative;
+      background-image: 
+        linear-gradient(to bottom, rgba(0,0,0,0) 30%, rgba(0,0,0,0.7) 100%),
+        url('https://raw.githubusercontent.com/sergebelongie/summerhouse/main/assets/images/hero-exterior-enamel.png');
+      background-size: cover;
+      background-position: center center;
+      width: 100%;
+      aspect-ratio: 12 / 5;
+      max-height: 450px;
+      min-height: 250px;
+      display: flex;
+      align-items: flex-end;
+      color: white;
+      flex-shrink: 0; /* Don't shrink header when content overflows */
+    }
+
+    .header-content {
+      padding: 32px;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header-content h1 {
+      color: white;
+      font-size: 2.5rem;
+      margin-bottom: 4px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    .header-content p {
+      font-size: 0.9rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.9;
+      font-weight: 500;
+    }
+
+    .layout-container {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* === SIDEBAR (ACCORDION) === */
+    .sidebar {
+      width: 280px;
+      background-color: var(--sidebar-bg);
+      border-right: 1px solid var(--border-color);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      padding: 16px 0;
+    }
+
+    /* Accordion Group */
+    .nav-group {
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .nav-group:last-child {
+      border-bottom: none;
+    }
+
+    /* Accordion Header (Clickable) */
+    .nav-group-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px;
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--text-main);
+      transition: background-color 0.2s;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .nav-group-header:hover {
+      background-color: rgba(0,0,0,0.03);
+    }
+
+    /* Chevron Icon */
+    .chevron {
+      transition: transform 0.3s ease;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .nav-group.open .chevron {
+      transform: rotate(180deg);
+    }
+
+    /* Accordion Content (Links) */
+    .nav-group-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+      background-color: var(--bg-color); /* Slightly different bg for links */
+    }
+
+    .nav-group.open .nav-group-content {
+      /* Large enough max-height to fit content, smooth transition relies on this */
+      max-height: 400px; 
+    }
+
+    .nav-link {
+      display: block;
+      padding: 12px 24px 12px 40px; /* Indent links slightly */
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.95rem;
+      border-left: 3px solid transparent;
+      transition: all 0.2s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--text-main);
+      background-color: var(--sidebar-bg);
+    }
+
+    .nav-link.active {
+      color: var(--text-main);
+      font-weight: 500;
+      border-left-color: var(--accent-color);
+      background-color: var(--sidebar-bg);
+    }
+
+    /* === MAIN CONTENT AREA === */
+    .main-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 40px;
+      scroll-behavior: smooth;
+    }
+
+    .tab-pane {
+      display: none;
+      animation: fadeIn 0.4s ease;
+      max-width: 800px;
+    }
+
+    .tab-pane.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .tab-pane h2 {
+      font-size: 2rem;
+      margin-bottom: 24px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .tab-pane h3 {
+      font-size: 1.3rem;
+      margin-top: 32px;
+      margin-bottom: 12px;
+      color: var(--text-main);
+    }
+
+    .tab-pane p {
+      margin-bottom: 16px;
+      color: var(--text-muted);
+    }
+    
+    .tab-pane ul {
+      margin-left: 20px;
+      margin-bottom: 16px;
+      color: var(--text-muted);
+      list-style-type: none; /* Remove default bullets */
+    }
+    
+    .tab-pane ul li {
+      margin-bottom: 8px;
+      position: relative;
+    }
+    
+    /* Editorial En-dash list style */
+    .tab-pane ul li::before {
+      content: '–';
+      position: absolute;
+      left: -20px;
+      color: var(--text-muted);
+    }
+
+    /* Links & Buttons */
+    .tab-pane a:not(.btn) {
+      color: var(--accent-color);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .tab-pane a:not(.btn):hover {
+      color: var(--text-main);
+    }
+
+    .btn, .drive-link {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: transparent;
+      color: var(--text-main);
+      text-decoration: none;
+      border-radius: 4px;
+      border: 1px solid var(--text-main);
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+      margin-bottom: 16px;
+    }
+
+    .btn:hover, .drive-link:hover {
+      background-color: var(--text-main);
+      color: var(--bg-color);
+    }
+
+    /* Property Layout specific styles */
+    .room-card {
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+    
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .photo-grid img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 6px;
+      cursor: pointer; /* Indicate it's clickable */
+      border: 1px solid var(--border-color);
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+    
+    .photo-grid img:hover {
+      transform: scale(1.02);
+      opacity: 0.9;
+    }
+
+    .amenities-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+      padding-left: 0 !important;
+    }
+
+    .amenities-list li {
+      background: var(--sidebar-bg);
+      padding: 4px 12px;
+      border-radius: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    
+    .amenities-list li::before {
+      display: none; /* Remove en-dash for tags */
+    }
+    
+    .lightbox-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.9);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .lightbox-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+    
+    .lightbox-content {
+      position: relative;
+      max-width: 90%;
+      max-height: 80vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .lightbox-image {
+      max-width: 100%;
+      max-height: 80vh;
+      object-fit: contain;
+      border-radius: 4px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+    
+    .lightbox-caption {
+      color: white;
+      font-family: var(--font-heading);
+      font-size: 1.2rem;
+      margin-top: 16px;
+      text-align: center;
+    }
+    
+    .lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      color: white;
+      font-size: 30px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 10px;
+      z-index: 10000;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    
+    .lightbox-close:hover {
+      opacity: 1;
+    }
+    
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      color: white;
+      font-size: 40px;
+      cursor: pointer;
+      background: rgba(0,0,0,0.3);
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+      opacity: 0.7;
+      transition: opacity 0.2s, background 0.2s;
+    }
+    
+    .lightbox-nav:hover {
+      opacity: 1;
+      background: rgba(0,0,0,0.6);
+    }
+    
+    .lightbox-prev {
+      left: 20px;
+    }
+    
+    .lightbox-next {
+      right: 20px;
+    }
+
+    /* Mobile Toggle Button */
+    .mobile-menu-toggle {
+      display: none;
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255,255,255,0.4);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 6px;
+      z-index: 100;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        overflow: auto; /* Allow body scrolling on mobile */
+      }
+      
+      header {
+        aspect-ratio: auto;
+        min-height: 200px;
+      }
+
+      .header-content h1 {
+        font-size: 1.8rem;
+      }
+
+      .layout-container {
+        flex-direction: column;
+        overflow: visible;
+      }
+
+      .mobile-menu-toggle {
+        display: block;
+      }
+
+      .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+        display: none; /* Hidden by default on mobile */
+        height: auto;
+        padding: 0;
+      }
+
+      .sidebar.active {
+        display: block;
+      }
+
+      .main-content {
+        padding: 24px 20px;
+        overflow-y: visible; /* Let body handle scrolling */
+      }
+      
+      .photo-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .lightbox-nav {
+        /* Make nav buttons easier to tap on mobile, or rely on swipe */
+        background: rgba(0,0,0,0.5);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <button class="mobile-menu-toggle" id="menuToggle">Menu</button>
+    <div class="header-content">
+      <h1>Gyvelbakken 10</h1>
+      <p>Guest Hub &bull; Veddinge Bakker</p>
+    </div>
+  </header>
+
+  <div class="layout-container">
+    
+    <nav class="sidebar" id="sidebar">
+      
+      <!-- WELCOME GROUP -->
+      <div class="nav-group open" id="group-welcome">
+        <div class="nav-group-header" onclick="toggleNavGroup('group-welcome')">
+          Welcome <span class="chevron">▼</span>
+        </div>
+        <div class="nav-group-content">
+          <a href="#" class="nav-link active" onclick="switchTab(event, 'welcome')">Overview</a>
+          <a href="#" class="nav-link" onclick="switchTab(event, 'getting-here')">Getting Here</a>
+          <a href="#" class="nav-link" onclick="switchTab(event, 'parking')">Parking</a>
+        </div>
+      </div>
+
+      <!-- PROPERTY GROUP -->
+      <div class="nav-group" id="group-property">
+        <div class="nav-group-header" onclick="toggleNavGroup('group-property')">
+          The Property <span class="chevron">▼</span>
+        </div>
+        <div class="nav-group-content">
+          <a href="#" class="nav-link" onclick="switchTab(event, 'property-layout')">Property Layout</a>
+          <a href="#" class="nav-link" onclick="switchTab(event, 'wifi')">Wi-Fi</a>
+          <a href="#" class="nav-link" onclick="switchTab(event, 'keys-locks')">Keys & Locks</a>
+          <a href="#" class="nav-link" onclick="switchTab(event, 'heating-cooling')">Heating & Cooling</a>
+          <a href="#" class="nav-link" onclick="switchTab(event, 'water-plumbing')">Water & Plumbing</a>
+          <a href="#" class="nav-link" onclick="switchTab(event, 'kitchen')">Kitchen Appliances</a>
+        </div>
+      </div>
+      
+      <!-- STAY GROUP -->
+      <div class="nav-group" id="group-stay">
+        <div class="nav-group-header" onclick="toggleNavGroup('group-stay')">
+          Your Stay <span class="chevron">▼</span>
+        </div>
+        <div class="nav-group-content">
+          <a href="#" class="nav-link" onclick="switchTab(event, 'cleaning-trash')">Cleaning & Trash</a>
+          <a href="#" class="nav-link" onclick="switchTab(event, 'local-area')">Local Area Guide</a>
+          <a href="#" class="nav-link" onclick="switchTab(event, 'house-rules')">House Rules</a>
+        </div>
+      </div>
+
+      <!-- SUPPORT GROUP -->
+      <div class="nav-group" id="group-support">
+        <div class="nav-group-header" onclick="toggleNavGroup('group-support')">
+          Support <span class="chevron">▼</span>
+        </div>
+        <div class="nav-group-content">
+          <a href="#" class="nav-link" onclick="switchTab(event, 'contacts')">Emergency Contacts</a>
+          <a href="#" class="nav-link" onclick="switchTab(event, 'manuals')">Appliance Manuals</a>
+          <a href="#" class="nav-link" onclick="switchTab(event, 'report-problem')">Report a Problem</a>
+        </div>
+      </div>
+
+      <!-- DEPARTURE GROUP -->
+      <div class="nav-group" id="group-departure">
+        <div class="nav-group-header" onclick="toggleNavGroup('group-departure')">
+          Departure <span class="chevron">▼</span>
+        </div>
+        <div class="nav-group-content">
+          <a href="#" class="nav-link" onclick="switchTab(event, 'checkout')">Check-out Checklist</a>
+        </div>
+      </div>
+
+    </nav>
+
+    <main class="main-content" id="mainContent">
+      
+      <div class="content-wrapper">
+        
+        <!-- TAB: WELCOME OVERVIEW -->
+        <div id="welcome" class="tab-pane active">
+          <h2>Welcome to Veddinge Bakker</h2>
+          <p>We are so happy to host you at our summer home. This digital guide contains everything you need to know about the property to ensure a comfortable and relaxing stay.</p>
+          <p>Whether you need the Wi-Fi password, instructions on how to operate the heat pump, or tips on local beaches, you'll find it in the menu on the left.</p>
+          
+          <div class="room-card" style="margin-top: 32px; background-color: var(--sidebar-bg); border: none;">
+            <h3>Quick Details</h3>
+            <ul>
+              <li><strong>Address:</strong> Gyvelbakken 10, 4550 Asnæs</li>
+              <li><strong>Check-in:</strong> 15:00 (3:00 PM)</li>
+              <li><strong>Check-out:</strong> 11:00 AM</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- TAB: GETTING HERE -->
+        <div id="getting-here" class="tab-pane">
+          <h2>Getting Here</h2>
+          <div class="room-card">
+            <h3>Address</h3>
+            <p><strong>Gyvelbakken 10</strong><br>4550 Asnæs<br>Denmark</p>
+            
+            <p>The house is located in the scenic Veddinge Bakker region, approximately 1 hour and 15 minutes by car from Copenhagen.</p>
+            
+            <div style="display: flex; gap: 16px; flex-wrap: wrap; margin-top: 16px;">
+              <a href="https://maps.google.com/?q=Gyvelbakken+10,+4550+Asnæs" target="_blank" rel="noopener" class="drive-link">
+                Open in Google Maps &rarr;
+              </a>
+            </div>
+            
+            <img src="https://raw.githubusercontent.com/sergebelongie/summerhouse/main/assets/images/enamel-pin.png" alt="Gyvelbakken 10 Enamel Pin" style="width: 100%; height: auto; border-radius: 8px; margin-top: 32px; display: block; border: 1px solid var(--border-color);" onerror="this.style.display='none'">
+          </div>
+        </div>
+
+        <!-- TAB: PARKING -->
+        <div id="parking" class="tab-pane">
+          <h2>Parking Instructions</h2>
+          <p>There is ample parking on the property.</p>
+          <ul>
+            <li>Please park on the gravel driveway in front of the house.</li>
+            <li>There is space for 2-3 standard-sized vehicles.</li>
+            <li>Please do not park on the grass to protect the landscaping.</li>
+            <li>Ensure you are not blocking the road (Gyvelbakken) for neighbors or emergency vehicles.</li>
+          </ul>
+        </div>
+
+        <!-- TAB: PROPERTY LAYOUT (with photos) -->
+        <div id="property-layout" class="tab-pane">
+          <h2>Property Layout</h2>
+          <p>Click on any photo to view it full screen.</p>
+          
+          <div class="room-card">
+            <h3>Main Living Area</h3>
+            <p>Open-concept living room, dining area, and kitchen with direct access to the wooden deck.</p>
+            <ul class="amenities-list">
+              <li>Wood-burning stove</li>
+              <li>Smart TV</li>
+              <li>Dining table (seats 6-8)</li>
+            </ul>
+            <div class="photo-grid" data-group="Main Living Area">
+              <img src="https://raw.githubusercontent.com/sergebelongie/summerhouse/main/assets/images/living-room-1.jpg" alt="Living Room View 1" loading="lazy" onerror="this.src='https://placehold.co/400x300/f5f5f5/2c2c2c?text=Living+Room+1'">
+              <img src="https://raw.githubusercontent.com/sergebelongie/summerhouse/main/assets/images/living-room-2.jpg" alt="Living Room View 2" loading="lazy" onerror="this.src='https://placehold.co/400x300/f5f5f5/2c2c2c?text=Living+Room+2'">
+              <img src="https://raw.githubusercontent.com/sergebelongie/summerhouse/main/assets/images/dining-area.jpg" alt="Dining Area" loading="lazy" onerror="this.src='https://placehold.co/400x300/f5f5f5/2c2c2c?text=Dining+Area'">
+              <img src="https://raw.githubusercontent.com/sergebelongie/summerhouse/main/assets/images/kitchen-1.jpg" alt="Kitchen" loading="lazy" onerror="this.src='https://placehold.co/400x300/f5f5f5/2c2c2c?text=Kitchen'">
+            </div>
+          </div>
+
+          <div class="room-card">
+            <h3>Primary Bedroom (Main House)</h3>
+            <p>Features a comfortable double bed and storage space.</p>
+            <div class="photo-grid" data-group="Primary Bedroom">
+              <img src="https://raw.githubusercontent.com/sergebelongie/summerhouse/main/assets/images/primary-bedroom-1.jpg" alt="Primary Bedroom View 1" loading="lazy" onerror="this.src='https://placehold.co/400x300/f5f5f5/2c2c2c?text=Bedroom+1'">
+              <img src="https://raw.githubusercontent.com/sergebelongie/summerhouse/main/assets/images/primary-bedroom-2.jpg" alt="Primary Bedroom View 2" loading="lazy" onerror="this.src='https://placehold.co/400x300/f5f5f5/2c2c2c?text=Bedroom+2'">
+            </div>
+          </div>
+
+          <div class="room-card">
+            <h3>Main Bathroom</h3>
+            <p>Full bathroom with shower located in the main house.</p>
+            <div class="photo-grid" data-group="Main Bathroom">
+              <img src="https://raw.githubusercontent.com/sergebelongie/summerhouse/main/assets/images/main-bathroom.jpg" alt="Main Bathroom" loading="lazy" onerror="this.src='https://placehold.co/400x300/f5f5f5/2c2c2c?text=Main+Bathroom'">
+            </div>
+          </div>
+
+          <div class="room-card">
+            <h3>The Annex</h3>
+            <p>A separate building just steps from the main house, featuring additional sleeping quarters, a bathroom, and utility facilities.</p>
+            <ul class="amenities-list">
+              <li>2 Bedrooms</li>
+              <li>1 Bathroom</li>
+              <li>Laundry Room</li>
+              <li>Outdoor Shower</li>
+            </ul>
+            <div class="photo-grid" data-group="The Annex">
+              <img src="https://raw.githubusercontent.com/sergebelongie/summerhouse/main/assets/images/annex%20bedroom%201.JPG" alt="Annex Bedroom 1" loading="lazy" onerror="this.src='https://placehold.co/400x300/f5f5f5/2c2c2c?text=Annex+Bed+1'">
+              <img src="https://raw.githubusercontent.com/sergebelongie/summerhouse/main/assets/images/annex%20bedroom%202.JPG" alt="Annex Bedroom 2" loading="lazy" onerror="this.src='https://placehold.co/400x300/f5f5f5/2c2c2c?text=Annex+Bed+2'">
+              <img src="https://raw.githubusercontent.com/sergebelongie/summerhouse/main/assets/images/annex-bathroom.JPG" alt="Annex Bathroom" loading="lazy" onerror="this.src='https://placehold.co/400x300/f5f5f5/2c2c2c?text=Annex+Bath'">
+              <img src="https://raw.githubusercontent.com/sergebelongie/summerhouse/main/assets/images/laundry-room.JPG" alt="Laundry Room" loading="lazy" onerror="this.src='https://placehold.co/400x300/f5f5f5/2c2c2c?text=Laundry'">
+              <img src="https://raw.githubusercontent.com/sergebelongie/summerhouse/main/assets/images/outdoor-shower.JPG" alt="Outdoor Shower" loading="lazy" onerror="this.src='https://placehold.co/400x300/f5f5f5/2c2c2c?text=Outdoor+Shower'">
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: WIFI -->
+        <div id="wifi" class="tab-pane">
+          <h2>Wi-Fi Details</h2>
+          <div class="room-card">
+            <p><strong>Network Name (SSID):</strong> <code>Gyvelbakken_Guest</code></p>
+            <p><strong>Password:</strong> <code>Summer2024!</code></p>
+            <p style="font-size: 0.9em; color: var(--text-muted); margin-top: 16px;">The router is located in the living room near the television. If you experience connectivity issues, try restarting the router by unplugging it for 30 seconds.</p>
+          </div>
+        </div>
+        
+        <!-- TAB: KEYS & LOCKS -->
+        <div id="keys-locks" class="tab-pane">
+          <h2>Keys & Locks</h2>
+          <p>Content regarding smart locks, keyboxes, or physical keys goes here.</p>
+        </div>
+
+        <!-- TAB: HEATING & COOLING -->
+        <div id="heating-cooling" class="tab-pane">
+          <h2>Heating & Cooling</h2>
+          <h3>Heat Pump</h3>
+          <p>The house is primarily heated by an air-to-air heat pump located in the living room.</p>
+          <ul>
+            <li>Use the remote control provided on the wall bracket.</li>
+            <li>Recommended temperature: 20-22°C.</li>
+            <li>In summer, this unit can also be used for air conditioning (select the 'Cool' mode).</li>
+          </ul>
+          <h3>Wood Stove</h3>
+          <p>You are welcome to use the wood-burning stove for extra warmth and coziness. Please only use dry, clean firewood.</p>
+        </div>
+
+        <!-- TAB: WATER & PLUMBING -->
+        <div id="water-plumbing" class="tab-pane">
+          <h2>Water & Plumbing</h2>
+          <p>Information about the hot water heater, main water shutoff valve, and any septic tank rules goes here.</p>
+        </div>
+
+        <!-- TAB: KITCHEN -->
+        <div id="kitchen" class="tab-pane">
+          <h2>Kitchen Appliances</h2>
+          <p>Information on how to use the induction stove, oven, dishwasher, and coffee maker.</p>
+        </div>
+        
+        <!-- TAB: CLEANING & TRASH -->
+        <div id="cleaning-trash" class="tab-pane">
+          <h2>Cleaning & Trash</h2>
+          <p>Information on trash sorting (essential in Denmark!) and cleaning expectations.</p>
+        </div>
+
+        <!-- TAB: LOCAL AREA -->
+        <div id="local-area" class="tab-pane">
+          <h2>Local Area Guide</h2>
+          <p>Recommendations for groceries, beaches (Ordrup Næs, Sanddobberne), and attractions in Odsherred.</p>
+        </div>
+
+        <!-- TAB: HOUSE RULES -->
+        <div id="house-rules" class="tab-pane">
+          <h2>House Rules</h2>
+          <ul>
+            <li>No smoking inside any buildings.</li>
+            <li>Quiet hours between 22:00 and 08:00.</li>
+            <li>Pets are not allowed on the furniture.</li>
+          </ul>
+        </div>
+        
+        <!-- TAB: CONTACTS -->
+        <div id="contacts" class="tab-pane">
+          <h2>Emergency Contacts</h2>
+          <ul>
+            <li><strong>Police/Fire/Ambulance:</strong> 112</li>
+            <li><strong>Non-Emergency Police:</strong> 114</li>
+            <li><strong>Medical Helpline (Lægevagten):</strong> 1818 (Region Sjælland)</li>
+          </ul>
+        </div>
+
+        <!-- TAB: MANUALS -->
+        <div id="manuals" class="tab-pane">
+          <h2>Appliance Manuals</h2>
+          <p>We have uploaded digital versions of manuals for major appliances to a shared Google Drive folder.</p>
+          <a href="#" class="drive-link" target="_blank">Access Manuals on Google Drive &rarr;</a>
+        </div>
+        
+        <!-- TAB: REPORT PROBLEM -->
+        <div id="report-problem" class="tab-pane">
+          <h2>Report a Problem</h2>
+          <p>If something breaks or isn't working during your stay, please let us know immediately so we can assist you.</p>
+          <p><em>(Contact form or email link would go here)</em></p>
+        </div>
+        
+        <!-- TAB: CHECKOUT -->
+        <div id="checkout" class="tab-pane">
+          <h2>Check-out Checklist</h2>
+          <p>Before you leave, please help us by completing the following:</p>
+          <ul>
+            <li>Empty the fridge and freezer.</li>
+            <li>Take out all trash to the bins outside.</li>
+            <li>Start the dishwasher.</li>
+            <li>Turn the heat pump down to 10°C (if staying in winter months).</li>
+            <li>Ensure all doors and windows are locked.</li>
+          </ul>
+          <p>Thank you for staying with us!</p>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <div class="lightbox-overlay" id="lightboxOverlay">
+    <button class="lightbox-close" id="lightboxClose">&times;</button>
+    <button class="lightbox-nav lightbox-prev" id="lightboxPrev">&#10094;</button>
+    <div class="lightbox-content">
+      <img src="" alt="Fullscreen view" class="lightbox-image" id="lightboxImg">
+    </div>
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+    <button class="lightbox-nav lightbox-next" id="lightboxNext">&#10095;</button>
+  </div>
+
+  <script>
+    // --- Navigation Logic ---
+    function switchTab(event, tabId) {
+      if (event) event.preventDefault();
+
+      // Update active link styling
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('active');
+      });
+      if (event && event.currentTarget) {
+        event.currentTarget.classList.add('active');
+      }
+
+      // Hide all tabs and show selected
+      document.querySelectorAll('.tab-pane').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      document.getElementById(tabId).classList.add('active');
+
+      // On mobile, close sidebar after selection
+      if (window.innerWidth <= 768) {
+        document.getElementById('sidebar').classList.remove('active');
+      }
+
+      // Scroll to top of main content
+      document.getElementById('mainContent').scrollTop = 0;
+    }
+
+    // Accordion Logic
+    function toggleNavGroup(groupId) {
+      const allGroups = document.querySelectorAll('.nav-group');
+      const clickedGroup = document.getElementById(groupId);
+      
+      // If clicking an already open group, just close it
+      if (clickedGroup.classList.contains('open')) {
+        clickedGroup.classList.remove('open');
+      } else {
+        // Close all other groups
+        allGroups.forEach(group => {
+          group.classList.remove('open');
+        });
+        // Open the clicked group
+        clickedGroup.classList.add('open');
+      }
+    }
+
+    // Mobile Menu Toggle
+    document.getElementById('menuToggle').addEventListener('click', function() {
+      document.getElementById('sidebar').classList.toggle('active');
+    });
+
+    // --- Lightbox Gallery Logic ---
+    const allImages = Array.from(document.querySelectorAll('.photo-grid img'));
+    const lightbox = document.getElementById('lightboxOverlay');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxCaption = document.getElementById('lightboxCaption');
+    let currentImageIndex = 0;
+    
+    // Open Lightbox
+    allImages.forEach((img, index) => {
+      img.addEventListener('click', () => {
+        currentImageIndex = index;
+        updateLightboxContent();
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+      });
+    });
+    
+    // Close Lightbox
+    function closeLightbox() {
+      lightbox.classList.remove('active');
+      // Small delay to allow fade out animation before clearing src
+      setTimeout(() => { lightboxImg.src = ''; }, 300); 
+      document.body.style.overflow = ''; 
+    }
+    
+    document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+    
+    // Close on background click
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox || e.target.classList.contains('lightbox-content')) {
+        closeLightbox();
+      }
+    });
+    
+    // Navigation Functions
+    function showNextImage() {
+      currentImageIndex = (currentImageIndex + 1) % allImages.length;
+      updateLightboxContent();
+    }
+    
+    function showPrevImage() {
+      currentImageIndex = (currentImageIndex - 1 + allImages.length) % allImages.length;
+      updateLightboxContent();
+    }
+    
+    document.getElementById('lightboxNext').addEventListener('click', (e) => {
+      e.stopPropagation(); // Prevent closing
+      showNextImage();
+    });
+    
+    document.getElementById('lightboxPrev').addEventListener('click', (e) => {
+      e.stopPropagation(); // Prevent closing
+      showPrevImage();
+    });
+    
+    // Update image and caption
+    function updateLightboxContent() {
+      const imgData = allImages[currentImageIndex];
+      lightboxImg.src = imgData.src;
+      
+      // Get the group name (e.g., "Primary Bedroom") from the parent container
+      const groupName = imgData.closest('.photo-grid').getAttribute('data-group');
+      lightboxCaption.textContent = groupName || "";
+    }
+    
+    // Keyboard Support
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('active')) return;
+      
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowRight') showNextImage();
+      if (e.key === 'ArrowLeft') showPrevImage();
+    });
+    
+    // Touch Swipe Support for Mobile
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    lightbox.addEventListener('touchstart', e => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, false);
+    
+    lightbox.addEventListener('touchend', e => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    }, false);
+    
+    function handleSwipe() {
+      const threshold = 50; // minimum distance to register a swipe
+      if (touchEndX < touchStartX - threshold) {
+        showNextImage(); // Swiped left
+      }
+      if (touchEndX > touchStartX + threshold) {
+        showPrevImage(); // Swiped right
+      }
+    }
+
+  </script>
+</body>
+</html>
