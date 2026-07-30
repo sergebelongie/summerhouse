@@ -564,6 +564,17 @@
             if (showLabels) {
                 const labelY = y + h/2 - (showDimensions ? 6 : 0);
                 g += `<text x="${x + w/2}" y="${labelY}" font-size="11" font-weight="600" fill="#343E38" text-anchor="middle" pointer-events="none">${room.name}</text>`;
+
+                // Add Lockbox Label only to Living Room
+                if (id === 'main_stue') {
+                    g += `
+                        <g transform="translate(${x - 35}, ${y + 10})">
+                            <line x1="26" y1="13" x2="35" y2="13" stroke="#CBB499" stroke-width="1.5" />
+                            <circle cx="13" cy="13" r="13" fill="#FFFFFF" stroke="#CBB499" stroke-width="1" />
+                            <text x="13" y="18" font-size="15" text-anchor="middle" pointer-events="none">🔐</text>
+                        </g>
+                    `;
+                }
             }
 
             if (showDimensions) {
