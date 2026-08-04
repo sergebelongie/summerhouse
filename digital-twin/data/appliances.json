@@ -1,1 +1,1 @@
-[{"id": "a1","room_id": "koekken","name": "Køleskab (Fridge)","dimensions": { "w": 0.6, "h": 1.8, "d": 0.6 },"position": { "x": 9.7, "y": 0.9, "z": 0.3 },"color": "#cbd5e1"},{"id": "a2","room_id": "stue","name": "Brændeovn (Wood Stove)","dimensions": { "w": 0.5, "h": 1.2, "d": 0.5 },"position": { "x": 5.5, "y": 0.6, "z": 0.5 },"color": "#1e293b"}]
+/* STREAMING_CHUNK:Creating empty appliances array to fulfill fetch request... */[]
