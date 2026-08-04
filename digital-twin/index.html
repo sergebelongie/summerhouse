@@ -240,15 +240,25 @@
         async function loadData() {
             try {
                 // Fetching JSON data dynamically (smartly handles Canvas vs Live site)
-                const [roomsData, furnishingsData, photosData, appliancesData] = await Promise.all([
+                const [roomsData, furnishingsData, photosData, appliancesData, architectureData] = await Promise.all([
                     fetchCleanJSON('data/rooms.json'),
                     fetchCleanJSON('data/furnishings.json'),
                     fetchCleanJSON('data/photos.json'),
-                    fetchCleanJSON('data/appliances.json')
+                    fetchCleanJSON('data/appliances.json'),
+                    fetchCleanJSON('data/architecture.json').catch(() => []) // Catch if file doesn't exist yet
                 ]);
 
                 // Build Geometry
-                roomsData.forEach(room => createBlock(room, true));
+                // 1. Flatten rooms into floor slabs (height: 0.1m) so we can see inside
+                roomsData.forEach(room => {
+                    const floorData = { ...room };
+                    floorData.dimensions = { ...room.dimensions, h: 0.1 };
+                    floorData.position = { ...room.position, y: 0.05 };
+                    createBlock(floorData, true);
+                });
+
+                // 2. Load physical items and structural walls
+                architectureData.forEach(wall => createBlock(wall, false));
                 furnishingsData.forEach(item => createBlock(item, false));
                 appliancesData.forEach(app => createBlock(app, false));
                 photosData.forEach(photo => createPhotoMarker(photo));
