@@ -219,23 +219,25 @@
             interactableObjects.push(sprite);
         }
 
+        async function fetchCleanJSON(url) {
+            const res = await fetch(url);
+            if (!res.ok) throw new Error(`Could not find ${url} (404)`);
+            const text = await res.text();
+            
+            // This regex strips out any /* ... */ comments that were injected into the JSON
+            const cleanText = text.replace(/\/\*[\s\S]*?\*\//g, '');
+            return JSON.parse(cleanText);
+        }
+
         async function loadData() {
             try {
                 // Fetching JSON data dynamically from GitHub repository structure
-                const [roomsRes, furnishingsRes, photosRes, appliancesRes] = await Promise.all([
-                    fetch('data/rooms.json'),
-                    fetch('data/furnishings.json'),
-                    fetch('data/photos.json'),
-                    fetch('data/appliances.json')
+                const [roomsData, furnishingsData, photosData, appliancesData] = await Promise.all([
+                    fetchCleanJSON('data/rooms.json'),
+                    fetchCleanJSON('data/furnishings.json'),
+                    fetchCleanJSON('data/photos.json'),
+                    fetchCleanJSON('data/appliances.json')
                 ]);
-
-                if (!roomsRes.ok) throw new Error("Could not find data/rooms.json (404)");
-                if (!photosRes.ok) throw new Error("Could not find data/photos.json (404)");
-
-                const roomsData = await roomsRes.json();
-                const furnishingsData = await furnishingsRes.json();
-                const photosData = await photosRes.json();
-                const appliancesData = await appliancesRes.json();
 
                 // Build Geometry
                 roomsData.forEach(room => createBlock(room, true));
