@@ -217,7 +217,6 @@
         }
 
         function createCompass() {
-            // Create a high-res canvas for crisp text and lines
             const canvas = document.createElement('canvas');
             canvas.width = 512;
             canvas.height = 512;
@@ -227,14 +226,12 @@
 
             ctx.clearRect(0, 0, 512, 512);
 
-            // Draw Outer Ring
             ctx.beginPath();
             ctx.arc(cx, cy, 180, 0, 2 * Math.PI);
             ctx.lineWidth = 3;
-            ctx.strokeStyle = 'rgba(107, 122, 116, 0.4)'; // Muted Sage
+            ctx.strokeStyle = 'rgba(107, 122, 116, 0.4)';
             ctx.stroke();
 
-            // Draw Inner Crosshairs
             ctx.beginPath();
             ctx.moveTo(cx, cy - 180); ctx.lineTo(cx, cy + 180);
             ctx.moveTo(cx - 180, cy); ctx.lineTo(cx + 180, cy);
@@ -242,7 +239,6 @@
             ctx.strokeStyle = 'rgba(107, 122, 116, 0.3)';
             ctx.stroke();
 
-            // North Pointer (Terracotta Color)
             ctx.fillStyle = '#C07A63'; 
             ctx.beginPath();
             ctx.moveTo(cx, cy - 160);
@@ -251,7 +247,6 @@
             ctx.lineTo(cx - 20, cy - 20);
             ctx.fill();
 
-            // South Pointer
             ctx.fillStyle = '#6B7A74'; 
             ctx.beginPath();
             ctx.moveTo(cx, cy + 160);
@@ -260,82 +255,59 @@
             ctx.lineTo(cx - 20, cy + 20);
             ctx.fill();
 
-            // Directional Labels
             ctx.font = 'bold 42px Inter, sans-serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillStyle = '#2C3531'; // Dark text
+            ctx.fillStyle = '#2C3531';
             
-            // Counter-rotate text so it stays upright when the compass is rotated 168 degrees
+            // Counter-rotate text so it stays upright
             const textRot = -Math.PI * (168 / 180);
-            
             ctx.save(); ctx.translate(cx, cy - 210); ctx.rotate(textRot); ctx.fillText('N', 0, 0); ctx.restore();
             ctx.save(); ctx.translate(cx, cy + 210); ctx.rotate(textRot); ctx.fillText('S', 0, 0); ctx.restore();
             ctx.save(); ctx.translate(cx + 210, cy); ctx.rotate(textRot); ctx.fillText('E', 0, 0); ctx.restore();
             ctx.save(); ctx.translate(cx - 210, cy); ctx.rotate(textRot); ctx.fillText('W', 0, 0); ctx.restore();
 
             const texture = new THREE.CanvasTexture(canvas);
-            // Ensure texture stays crisp when viewed at a low angle
             texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+            const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, opacity: 0.8, depthWrite: false });
+            const compass = new THREE.Mesh(new THREE.PlaneGeometry(8, 8), material);
 
-            const material = new THREE.MeshBasicMaterial({
-                map: texture,
-                transparent: true,
-                opacity: 0.8,
-                depthWrite: false // Prevents visual clipping with the floor
-            });
-
-            // Make it 8x8 meters wide
-            const geometry = new THREE.PlaneGeometry(8, 8);
-            const compass = new THREE.Mesh(geometry, material);
-
-            // Place in the middle of the terrace (X:40 sits nicely between the covered and courtyard sections)
-            // Y: 0.11 raises it exactly 1cm above the terrace floor so they don't visually clash
             compass.position.set(40, 0.11, 41.5);
-            
-            // Lay it flat on the ground
             compass.rotation.x = -Math.PI / 2;
-            
-            // Rotate it to match the physical property orientation (North is ~168 deg from "up" on the layout)
             compass.rotation.z = Math.PI * (168 / 180);
-            
             scene.add(compass);
         }
 
         async function fetchCleanJSON(url) {
-            // Check if we are running in the sandboxed preview environment (Canvas)
             const isPreview = window.location.protocol === 'blob:';
             
-            // Add a cache-buster so GitHub's 5-minute cache doesn't hide your updates
-            const cacheBuster = `?t=${new Date().getTime()}`;
-            
-            // If in preview, redirect the fetch to the raw GitHub user content URL
+            // Use GitHub API in preview to completely bypass CDN caching
             const fetchUrl = isPreview ? 
-                `https://raw.githubusercontent.com/sergebelongie/summerhouse/main/digital-twin/${url}${cacheBuster}` : 
-                `${url}${cacheBuster}`;
+                `https://api.github.com/repos/sergebelongie/summerhouse/contents/digital-twin/${url}` : 
+                `${url}?t=${new Date().getTime()}`;
                 
-            const res = await fetch(fetchUrl);
-            if (!res.ok) throw new Error(`Could not find ${url} (404). Tried URL: ${fetchUrl}`);
+            // The API requires this header to return raw text instead of Base64 encoded blobs
+            const headers = isPreview ? { 'Accept': 'application/vnd.github.v3.raw' } : {};
+            const res = await fetch(fetchUrl, { headers });
+            
+            if (!res.ok) throw new Error(`Could not find ${url} (404).`);
             const text = await res.text();
             
-            // This regex strips out any /* ... */ comments that might accidentally break JSON parsing
-            const cleanText = text.replace(/\/\*[\s\S]*?\*\//g, '');
-            return JSON.parse(cleanText);
+            return JSON.parse(text.replace(/\/\*[\s\S]*?\*\//g, ''));
         }
 
         async function loadData() {
             try {
-                // Fetching JSON data dynamically (smartly handles Canvas vs Live site)
                 const [roomsData, furnishingsData, photosData, appliancesData, architectureData] = await Promise.all([
                     fetchCleanJSON('data/rooms.json'),
                     fetchCleanJSON('data/furnishings.json'),
                     fetchCleanJSON('data/photos.json'),
                     fetchCleanJSON('data/appliances.json'),
-                    fetchCleanJSON('data/architecture.json').catch(() => []) // Catch if file doesn't exist yet
+                    fetchCleanJSON('data/architecture.json').catch(() => [])
                 ]);
 
                 // Build Geometry
-                // 1. Flatten rooms into floor slabs (height: 0.1m) so we can see inside
+                // Flatten rooms into floor slabs (height: 0.1m) so we can see inside
                 roomsData.forEach(room => {
                     const floorData = { ...room };
                     floorData.dimensions = { ...room.dimensions, h: 0.1 };
@@ -343,12 +315,11 @@
                     createBlock(floorData, true);
                 });
 
-                // 2. Load physical items and structural walls
-                architectureData.forEach(wall => createBlock(wall, false));
                 furnishingsData.forEach(item => createBlock(item, false));
                 appliancesData.forEach(app => createBlock(app, false));
+                architectureData.forEach(wall => createBlock(wall, false));
                 photosData.forEach(photo => createPhotoMarker(photo));
-
+                
                 createCompass();
 
                 document.getElementById('data-stats').innerText = 
