@@ -132,6 +132,7 @@
         controls.dampingFactor = 0.05;
         controls.maxPolarAngle = Math.PI / 2 - 0.05;
         controls.target.set(45, 0, 35);
+        controls.zoomSpeed = 3.0; // Increased for faster pinch/scroll zooming
 
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
         scene.add(ambientLight);
@@ -239,7 +240,14 @@
             ctx.strokeStyle = 'rgba(107, 122, 116, 0.3)';
             ctx.stroke();
 
-            ctx.fillStyle = '#C07A63'; 
+            // Add slight drop shadow to make white pointers pop against the floor
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.2)';
+            ctx.shadowBlur = 4;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 2;
+
+            // North Pointer - Bright Red
+            ctx.fillStyle = '#FF2A2A'; 
             ctx.beginPath();
             ctx.moveTo(cx, cy - 160);
             ctx.lineTo(cx + 20, cy - 20);
@@ -247,7 +255,8 @@
             ctx.lineTo(cx - 20, cy - 20);
             ctx.fill();
 
-            ctx.fillStyle = '#6B7A74'; 
+            // South Pointer - Clean White
+            ctx.fillStyle = '#FFFFFF'; 
             ctx.beginPath();
             ctx.moveTo(cx, cy + 160);
             ctx.lineTo(cx + 20, cy + 20);
@@ -255,17 +264,37 @@
             ctx.lineTo(cx - 20, cy + 20);
             ctx.fill();
 
+            // East Pointer - Clean White
+            ctx.beginPath();
+            ctx.moveTo(cx + 160, cy);
+            ctx.lineTo(cx + 20, cy + 20);
+            ctx.lineTo(cx + 40, cy);
+            ctx.lineTo(cx + 20, cy - 20);
+            ctx.fill();
+
+            // West Pointer - Clean White
+            ctx.beginPath();
+            ctx.moveTo(cx - 160, cy);
+            ctx.lineTo(cx - 20, cy + 20);
+            ctx.lineTo(cx - 40, cy);
+            ctx.lineTo(cx - 20, cy - 20);
+            ctx.fill();
+
+            // Remove shadow for crisp text
+            ctx.shadowColor = 'transparent';
+
             ctx.font = 'bold 42px Inter, sans-serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillStyle = '#2C3531';
             
             // Counter-rotate text so it stays upright
             const textRot = -Math.PI * (168 / 180);
-            ctx.save(); ctx.translate(cx, cy - 210); ctx.rotate(textRot); ctx.fillText('N', 0, 0); ctx.restore();
-            ctx.save(); ctx.translate(cx, cy + 210); ctx.rotate(textRot); ctx.fillText('S', 0, 0); ctx.restore();
-            ctx.save(); ctx.translate(cx + 210, cy); ctx.rotate(textRot); ctx.fillText('E', 0, 0); ctx.restore();
-            ctx.save(); ctx.translate(cx - 210, cy); ctx.rotate(textRot); ctx.fillText('W', 0, 0); ctx.restore();
+            
+            // Draw N in Red, others in White
+            ctx.save(); ctx.translate(cx, cy - 210); ctx.rotate(textRot); ctx.fillStyle = '#FF2A2A'; ctx.fillText('N', 0, 0); ctx.restore();
+            ctx.save(); ctx.translate(cx, cy + 210); ctx.rotate(textRot); ctx.fillStyle = '#FFFFFF'; ctx.fillText('S', 0, 0); ctx.restore();
+            ctx.save(); ctx.translate(cx + 210, cy); ctx.rotate(textRot); ctx.fillStyle = '#FFFFFF'; ctx.fillText('E', 0, 0); ctx.restore();
+            ctx.save(); ctx.translate(cx - 210, cy); ctx.rotate(textRot); ctx.fillStyle = '#FFFFFF'; ctx.fillText('W', 0, 0); ctx.restore();
 
             const texture = new THREE.CanvasTexture(canvas);
             texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
