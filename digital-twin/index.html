@@ -77,6 +77,7 @@
 </head>
 <body>
 
+    <!-- UI Overlay -->
     <div id="ui-panel">
         <h1 class="text-xl font-bold text-[#2C3531] mb-1" style="font-family: 'Playfair Display', serif;">Gyvelbakken 10</h1>
         <p class="text-xs text-[#6B7A74] uppercase tracking-widest font-semibold mb-4">Summer Home 3D</p>
@@ -95,9 +96,11 @@
         </div>
     </div>
 
+    <!-- Photo Overlay -->
     <div id="photo-overlay">
         <span class="close-btn" onclick="document.getElementById('photo-overlay').style.display='none'">×</span>
         <h3 id="photo-title" class="text-sm font-bold mb-2 text-[#2C3531]">Room Photo</h3>
+        <!-- Uses a placeholder fallback if the actual image isn't found locally -->
         <img id="photo-img" src="" alt="Room Photo" onerror="this.onerror=null; this.src='https://placehold.co/400x300/e2e8f0/475569?text=Image+Not+Found';" />
         <p id="photo-desc" class="text-xs text-[#6B7A74] mt-2 leading-relaxed"></p>
     </div>
@@ -109,9 +112,6 @@
         import * as THREE from 'three';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-        // --- ACCURATE EMBEDDED LAYOUT DATA ---
-        // Extracted and mapped from property_layout_diagram.html
-        
         const roomsData = [
             // ANNEX
             { id: "annex_firewood", name: "Firewood", dimensions: { w: 3.5, h: 2.5, d: 1.5 }, position: { x: -10.25, y: 1.25, z: -13.75 }, color: "#E6E4DF", type: "room" },
@@ -150,8 +150,6 @@
             { id: "f3", room_id: "main_master_bed", name: "Master Bed", dimensions: { w: 2, h: 0.5, d: 2 }, position: { x: 6.25, y: 0.25, z: -3.375 }, color: "#94a3b8" }
         ];
 
-        const appliancesData = []; // Can be repopulated later
-
         const photosData = [
             { id: "p1", room_id: "annex_room1", name: "Annex Bedroom 1", position: { x: -8.5, y: 1.25, z: -11.375 }, url: "../assets/images/annex bedroom 1.JPG", desc: "View of the first annex bedroom." },
             { id: "p2", room_id: "annex_room2", name: "Annex Bedroom 2", position: { x: -8.5, y: 1.25, z: -5.875 }, url: "../assets/images/annex bedroom 2.JPG", desc: "Alternative view of the annex bedroom." },
@@ -165,17 +163,20 @@
             { id: "p10", room_id: "main_wc", name: "Guest Bathroom", position: { x: 10.75, y: 1.25, z: 11.375 }, url: "../assets/images/guest-bathroom.JPG", desc: "Guest bathroom." },
             { id: "p11", room_id: "annex_bad", name: "Annex Bathroom", position: { x: -10.125, y: 1.25, z: -8.625 }, url: "../assets/images/annex-bathroom.JPG", desc: "Bathroom in the annex." },
             { id: "p12", room_id: "annex_shower", name: "Outdoor Shower", position: { x: -6.75, y: 1.25, z: -13.75 }, url: "../assets/images/outdoor-shower.JPG", desc: "Outdoor shower area." },
-            { id: "p13", room_id: "exterior", name: "Hero Exterior", position: { x: -2.0, y: 4.0, z: 25.0 }, url: "../assets/images/hero-exterior.JPG", desc: "Exterior view of the summer house." }
+            { id: "p13", room_id: "exterior", name: "Hero Exterior", position: { x: -2.0, y: 4.0, z: 25.0 }, url: "../assets/images/hero-exterior.JPG", desc: "Exterior view of the summer house." },
+            { id: "p14", room_id: "main_master_bed", name: "Primary Bedroom", position: { x: 6.25, y: 1.25, z: -3.375 }, url: "../assets/images/primary-bedroom.JPG", desc: "Two adjacent single beds (190cm x 90cm each)." },
+            { id: "p15", room_id: "main_master_bath", name: "Primary Bathroom", position: { x: 6.0, y: 1.25, z: -7.25 }, url: "../assets/images/primary-bathroom.JPG", desc: "Main bathroom with shower and bathtub." },
+            { id: "p16", room_id: "sauna", name: "Sauna", position: { x: 7.25, y: 1.25, z: -6.0 }, url: "../assets/images/sauna.JPG", desc: "Indoor electric sauna." },
+            { id: "p17", room_id: "terrace", name: "Terrace", position: { x: 0.0, y: 1.25, z: 2.75 }, url: "../assets/images/terrace-1.JPG", desc: "Outdoor dining and lounge area." },
+            { id: "p18", room_id: "annex_vask", name: "Laundry Room", position: { x: -10.25, y: 1.25, z: -2.875 }, url: "../assets/images/laundry-room.JPG", desc: "Washer and dryer facilities." }
         ];
 
-        // --- END EMBEDDED DATA ---
-
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color('#F8F6F0'); // Match Nordic background
+        scene.background = new THREE.Color('#F8F6F0'); 
         scene.fog = new THREE.FogExp2('#F8F6F0', 0.015);
 
         const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(0, 30, 45); // Start with a wide view
+        camera.position.set(0, 30, 45); 
 
         const canvasContainer = document.getElementById('canvas-container');
         const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -198,16 +199,11 @@
         directionalLight.castShadow = true;
         directionalLight.shadow.mapSize.width = 2048;
         directionalLight.shadow.mapSize.height = 2048;
-        directionalLight.shadow.camera.left = -30;
-        directionalLight.shadow.camera.right = 30;
-        directionalLight.shadow.camera.top = 30;
-        directionalLight.shadow.camera.bottom = -30;
         scene.add(directionalLight);
 
-        // Ground Plane (Lawn)
         const groundGeometry = new THREE.PlaneGeometry(200, 200);
         const groundMaterial = new THREE.MeshStandardMaterial({ 
-            color: '#DCE4D8', // Light sage for grass to blend with theme
+            color: '#DCE4D8', 
             roughness: 0.9 
         });
         const ground = new THREE.Mesh(groundGeometry, groundMaterial);
@@ -232,11 +228,10 @@
             mesh.castShadow = true;
             mesh.receiveShadow = true;
 
-            // Add wireframe edges for definition
             if (isRoom) {
                 const edges = new THREE.EdgesGeometry(geometry);
                 const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ 
-                    color: 0x6B7A74, // Nordic muted border
+                    color: 0x6B7A74, 
                     linewidth: 1,
                     opacity: 0.5,
                     transparent: true
@@ -263,11 +258,11 @@
             context.roundRect(0, 0, canvas.width, canvas.height, 12);
             context.fill();
             
-            context.strokeStyle = '#6B7A74'; // Nordic muted
+            context.strokeStyle = '#6B7A74'; 
             context.lineWidth = 3;
             context.stroke();
 
-            context.fillStyle = '#2C3531'; // Nordic text
+            context.fillStyle = '#2C3531'; 
             context.font = 'Bold 36px Inter';
             context.textAlign = 'center';
             context.textBaseline = 'middle';
@@ -323,7 +318,6 @@
             const desc = document.getElementById('photo-desc');
 
             title.innerText = data.name;
-            // Uses actual repo path; falls back to placeholder on error via the HTML element
             img.src = data.url; 
             desc.innerText = data.desc;
             
