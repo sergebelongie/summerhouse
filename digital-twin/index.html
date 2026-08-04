@@ -8,6 +8,8 @@
     <style>
         body { margin: 0; overflow: hidden; background-color: #f8f6f0; font-family: 'Inter', sans-serif; }
         #canvas-container { width: 100vw; height: 100vh; display: block; }
+        
+        /* UI Panel Styling */
         #ui-panel {
             position: absolute;
             top: 20px;
@@ -21,6 +23,7 @@
             pointer-events: auto;
             z-index: 10;
         }
+        
         #loading {
             position: absolute;
             top: 50%;
@@ -35,6 +38,8 @@
             border-radius: 8px;
             text-align: center;
         }
+        
+        /* Photo Overlay Styling */
         #photo-overlay {
             position: absolute;
             bottom: 20px;
@@ -92,7 +97,7 @@
         </div>
         <div class="mt-4 pt-4 border-t border-[#E2DFD7]">
             <p class="text-xs font-semibold text-[#2C3531]">Model Statistics:</p>
-            <p class="text-xs text-[#6B7A74] mt-1" id="data-stats">Loading mapping data...</p>
+            <p class="text-xs text-[#6B7A74] mt-1" id="data-stats">Loading modular data via fetch()...</p>
         </div>
     </div>
 
@@ -100,7 +105,6 @@
     <div id="photo-overlay">
         <span class="close-btn" onclick="document.getElementById('photo-overlay').style.display='none'">×</span>
         <h3 id="photo-title" class="text-sm font-bold mb-2 text-[#2C3531]">Room Photo</h3>
-        <!-- Uses a placeholder fallback if the actual image isn't found locally -->
         <img id="photo-img" src="" alt="Room Photo" onerror="this.onerror=null; this.src='https://placehold.co/400x300/e2e8f0/475569?text=Image+Not+Found';" />
         <p id="photo-desc" class="text-xs text-[#6B7A74] mt-2 leading-relaxed"></p>
     </div>
@@ -111,65 +115,6 @@
     <script type="module">
         import * as THREE from 'three';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-
-        const roomsData = [
-            // ANNEX
-            { id: "annex_firewood", name: "Firewood", dimensions: { w: 3.5, h: 2.5, d: 1.5 }, position: { x: -10.25, y: 1.25, z: -13.75 }, color: "#E6E4DF", type: "room" },
-            { id: "annex_shower", name: "Outdoor Shower", dimensions: { w: 3.5, h: 2.5, d: 1.5 }, position: { x: -6.75, y: 1.25, z: -13.75 }, color: "#DDE5EC", type: "room" },
-            { id: "annex_room1", name: "Annex Bed 1", dimensions: { w: 7.0, h: 2.5, d: 3.25 }, position: { x: -8.5, y: 1.25, z: -11.375 }, color: "#DCE4D8", type: "room" },
-            { id: "annex_bad", name: "Annex Bath", dimensions: { w: 3.75, h: 2.5, d: 2.25 }, position: { x: -10.125, y: 1.25, z: -8.625 }, color: "#DDE5EC", type: "room" },
-            { id: "annex_entrance", name: "Annex Entry", dimensions: { w: 3.25, h: 2.5, d: 2.25 }, position: { x: -6.625, y: 1.25, z: -8.625 }, color: "#E8D0C5", type: "room" },
-            { id: "annex_room2", name: "Annex Bed 2", dimensions: { w: 7.0, h: 2.5, d: 3.25 }, position: { x: -8.5, y: 1.25, z: -5.875 }, color: "#DCE4D8", type: "room" },
-            { id: "annex_vask", name: "Laundry", dimensions: { w: 3.5, h: 2.5, d: 2.75 }, position: { x: -10.25, y: 1.25, z: -2.875 }, color: "#E6E4DF", type: "room" },
-            { id: "annex_skur", name: "Shed", dimensions: { w: 3.5, h: 2.5, d: 2.75 }, position: { x: -6.75, y: 1.25, z: -2.875 }, color: "#E6E4DF", type: "room" },
-            
-            // MAIN HOUSE WING 1 (Beds/Baths)
-            { id: "main_master_bath", name: "Master Bath", dimensions: { w: 5.0, h: 2.5, d: 3.5 }, position: { x: 6.0, y: 1.25, z: -7.25 }, color: "#DDE5EC", type: "room" },
-            { id: "main_skur", name: "Main Shed", dimensions: { w: 3.5, h: 2.5, d: 3.5 }, position: { x: 10.25, y: 1.25, z: -7.25 }, color: "#E6E4DF", type: "room" },
-            { id: "main_master_bed", name: "Master Bed", dimensions: { w: 5.5, h: 2.5, d: 4.25 }, position: { x: 6.25, y: 1.25, z: -3.375 }, color: "#DCE4D8", type: "room" },
-            { id: "main_garderobe", name: "Wardrobe", dimensions: { w: 3.0, h: 2.5, d: 4.25 }, position: { x: 10.5, y: 1.25, z: -3.375 }, color: "#E6E4DF", type: "room" },
-            { id: "main_hallway", name: "Hallway", dimensions: { w: 3.5, h: 2.5, d: 8.25 }, position: { x: 5.25, y: 1.25, z: 2.875 }, color: "#F0ECE1", type: "room" },
-            { id: "main_bed2", name: "Guest Bed 1", dimensions: { w: 5.0, h: 2.5, d: 4.125 }, position: { x: 9.5, y: 1.25, z: 0.8125 }, color: "#DCE4D8", type: "room" },
-            { id: "main_bed3", name: "Guest Bed 2", dimensions: { w: 5.0, h: 2.5, d: 4.9375 }, position: { x: 9.5, y: 1.25, z: 5.375 }, color: "#DCE4D8", type: "room" },
-            
-            // MAIN HOUSE WING 2 (Living/Entry)
-            { id: "main_stue", name: "Living Room", dimensions: { w: 10.0, h: 2.5, d: 11.0 }, position: { x: -7.0, y: 1.25, z: 12.5 }, color: "#E8D8C4", type: "room" },
-            { id: "main_kokken", name: "Kitchen & Dining", dimensions: { w: 9.0, h: 2.5, d: 11.0 }, position: { x: 2.5, y: 1.25, z: 12.5 }, color: "#EFE6D5", type: "room" },
-            { id: "main_viktualie", name: "Pantry", dimensions: { w: 2.5, h: 2.5, d: 2.25 }, position: { x: 10.75, y: 1.25, z: 8.125 }, color: "#E6E4DF", type: "room" },
-            { id: "main_wc", name: "Guest WC", dimensions: { w: 2.5, h: 2.5, d: 4.25 }, position: { x: 10.75, y: 1.25, z: 11.375 }, color: "#DDE5EC", type: "room" },
-            { id: "main_entre", name: "Entrance", dimensions: { w: 5.0, h: 2.5, d: 4.5 }, position: { x: 9.5, y: 1.25, z: 15.75 }, color: "#E8D0C5", type: "room" },
-
-            // TERRACES
-            { id: "covered_terrace", name: "Covered Terrace", dimensions: { w: 7.0, h: 0.1, d: 8.5 }, position: { x: -8.5, y: 0.05, z: 2.75 }, color: "#ECE1D2", type: "outdoor" },
-            { id: "courtyard_terrace", name: "Courtyard Terrace", dimensions: { w: 10.0, h: 0.1, d: 8.5 }, position: { x: 0.0, y: 0.05, z: 2.75 }, color: "#ECE1D2", type: "outdoor" }
-        ];
-
-        const furnishingsData = [
-            { id: "f1", room_id: "main_stue", name: "Sofa", dimensions: { w: 2.5, h: 0.8, d: 2.5 }, position: { x: -7.0, y: 0.4, z: 12.5 }, color: "#475569" },
-            { id: "f2", room_id: "main_kokken", name: "Dining Table", dimensions: { w: 3.5, h: 0.75, d: 1.5 }, position: { x: 2.5, y: 0.375, z: 12.5 }, color: "#78350f" },
-            { id: "f3", room_id: "main_master_bed", name: "Master Bed", dimensions: { w: 2, h: 0.5, d: 2 }, position: { x: 6.25, y: 0.25, z: -3.375 }, color: "#94a3b8" }
-        ];
-
-        const photosData = [
-            { id: "p1", room_id: "annex_room1", name: "Annex Bedroom 1", position: { x: -8.5, y: 1.25, z: -11.375 }, url: "../assets/images/annex bedroom 1.JPG", desc: "View of the first annex bedroom." },
-            { id: "p2", room_id: "annex_room2", name: "Annex Bedroom 2", position: { x: -8.5, y: 1.25, z: -5.875 }, url: "../assets/images/annex bedroom 2.JPG", desc: "Alternative view of the annex bedroom." },
-            { id: "p3", room_id: "main_kokken", name: "Dining Room 1", position: { x: 1.0, y: 1.25, z: 11.0 }, url: "../assets/images/dining-room-1.JPG", desc: "Dining area looking towards the kitchen." },
-            { id: "p4", room_id: "main_kokken", name: "Dining Room 2", position: { x: 3.0, y: 1.25, z: 13.0 }, url: "../assets/images/dining-room-2.JPG", desc: "Dining area from another angle." },
-            { id: "p5", room_id: "main_stue", name: "Living Room 1", position: { x: -5.0, y: 1.25, z: 12.0 }, url: "../assets/images/living-room-1.JPG", desc: "Main living area." },
-            { id: "p6", room_id: "main_stue", name: "Living Room 2", position: { x: -8.0, y: 1.25, z: 13.0 }, url: "../assets/images/living-room-2.JPG", desc: "Living area with view of the garden." },
-            { id: "p7", room_id: "main_bed2", name: "Guest Room 1", position: { x: 9.5, y: 1.25, z: 0.8 }, url: "../assets/images/guest-room-1.JPG", desc: "First guest room in the main house." },
-            { id: "p8", room_id: "main_bed3", name: "Guest Room 2", position: { x: 9.5, y: 1.25, z: 5.3 }, url: "../assets/images/guest-room-2.JPG", desc: "Second guest room in the main house." },
-            { id: "p9", room_id: "main_kokken", name: "Kitchen 1", position: { x: 3.0, y: 1.25, z: 11.0 }, url: "../assets/images/kitchen-1.JPG", desc: "Kitchen view." },
-            { id: "p10", room_id: "main_wc", name: "Guest Bathroom", position: { x: 10.75, y: 1.25, z: 11.375 }, url: "../assets/images/guest-bathroom.JPG", desc: "Guest bathroom." },
-            { id: "p11", room_id: "annex_bad", name: "Annex Bathroom", position: { x: -10.125, y: 1.25, z: -8.625 }, url: "../assets/images/annex-bathroom.JPG", desc: "Bathroom in the annex." },
-            { id: "p12", room_id: "annex_shower", name: "Outdoor Shower", position: { x: -6.75, y: 1.25, z: -13.75 }, url: "../assets/images/outdoor-shower.JPG", desc: "Outdoor shower area." },
-            { id: "p13", room_id: "exterior", name: "Hero Exterior", position: { x: -2.0, y: 4.0, z: 25.0 }, url: "../assets/images/hero-exterior.JPG", desc: "Exterior view of the summer house." },
-            { id: "p14", room_id: "main_master_bed", name: "Primary Bedroom", position: { x: 6.25, y: 1.25, z: -3.375 }, url: "../assets/images/primary-bedroom.JPG", desc: "Two adjacent single beds (190cm x 90cm each)." },
-            { id: "p15", room_id: "main_master_bath", name: "Primary Bathroom", position: { x: 6.0, y: 1.25, z: -7.25 }, url: "../assets/images/primary-bathroom.JPG", desc: "Main bathroom with shower and bathtub." },
-            { id: "p16", room_id: "sauna", name: "Sauna", position: { x: 7.25, y: 1.25, z: -6.0 }, url: "../assets/images/sauna.JPG", desc: "Indoor electric sauna." },
-            { id: "p17", room_id: "terrace", name: "Terrace", position: { x: 0.0, y: 1.25, z: 2.75 }, url: "../assets/images/terrace-1.JPG", desc: "Outdoor dining and lounge area." },
-            { id: "p18", room_id: "annex_vask", name: "Laundry Room", position: { x: -10.25, y: 1.25, z: -2.875 }, url: "../assets/images/laundry-room.JPG", desc: "Washer and dryer facilities." }
-        ];
 
         const scene = new THREE.Scene();
         scene.background = new THREE.Color('#F8F6F0'); 
@@ -202,10 +147,7 @@
         scene.add(directionalLight);
 
         const groundGeometry = new THREE.PlaneGeometry(200, 200);
-        const groundMaterial = new THREE.MeshStandardMaterial({ 
-            color: '#DCE4D8', 
-            roughness: 0.9 
-        });
+        const groundMaterial = new THREE.MeshStandardMaterial({ color: '#DCE4D8', roughness: 0.9 });
         const ground = new THREE.Mesh(groundGeometry, groundMaterial);
         ground.rotation.x = -Math.PI / 2;
         ground.position.y = -0.1;
@@ -214,7 +156,6 @@
 
         function createBlock(data, isRoom = false) {
             const geometry = new THREE.BoxGeometry(data.dimensions.w, data.dimensions.h, data.dimensions.d);
-            
             const material = new THREE.MeshStandardMaterial({ 
                 color: data.color,
                 transparent: isRoom && data.type !== 'outdoor',
@@ -224,21 +165,16 @@
 
             const mesh = new THREE.Mesh(geometry, material);
             mesh.position.set(data.position.x, data.position.y, data.position.z);
-            
             mesh.castShadow = true;
             mesh.receiveShadow = true;
 
             if (isRoom) {
                 const edges = new THREE.EdgesGeometry(geometry);
                 const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ 
-                    color: 0x6B7A74, 
-                    linewidth: 1,
-                    opacity: 0.5,
-                    transparent: true
+                    color: 0x6B7A74, linewidth: 1, opacity: 0.5, transparent: true
                 }));
                 mesh.add(line);
             }
-
             scene.add(mesh);
             return mesh;
         }
@@ -257,7 +193,6 @@
             context.beginPath();
             context.roundRect(0, 0, canvas.width, canvas.height, 12);
             context.fill();
-            
             context.strokeStyle = '#6B7A74'; 
             context.lineWidth = 3;
             context.stroke();
@@ -274,7 +209,6 @@
             
             sprite.position.set(data.position.x, data.position.y + 1, data.position.z);
             sprite.scale.set(2, 1, 1);
-            
             sprite.userData = { isPhotoMarker: true, photoData: data };
             scene.add(sprite);
             interactableObjects.push(sprite);
@@ -282,18 +216,38 @@
 
         async function loadData() {
             try {
+                // Fetching from the separate JSON files to maintain clean architecture
+                const [roomsRes, furnishingsRes, photosRes, appliancesRes] = await Promise.all([
+                    fetch('data/rooms.json'),
+                    fetch('data/furnishings.json'),
+                    fetch('data/photos.json'),
+                    fetch('data/appliances.json').catch(() => ({ json: () => [] })) // Failsafe if not created yet
+                ]);
+
+                if (!roomsRes.ok) throw new Error("Could not fetch rooms.json");
+
+                const roomsData = await roomsRes.json();
+                const furnishingsData = await furnishingsRes.json();
+                const photosData = await photosRes.json();
+                const appliancesData = await appliancesRes.json();
+
+                // Render objects based on JSON payloads
                 roomsData.forEach(room => createBlock(room, true));
                 furnishingsData.forEach(item => createBlock(item, false));
+                appliancesData.forEach(app => createBlock(app, false));
                 photosData.forEach(photo => createPhotoMarker(photo));
 
                 document.getElementById('data-stats').innerText = 
-                    `${roomsData.length} Structural Blocks\n` +
-                    `${photosData.length} Photo Markers Mapped`;
+                    `${roomsData.length} Rooms/Zones\n` +
+                    `${furnishingsData.length + appliancesData.length} Details\n` +
+                    `${photosData.length} Photo Markers mapped`;
                 
                 document.getElementById('loading').style.display = 'none';
             } catch (error) {
-                console.error(error);
-                document.getElementById('loading').innerHTML = `<span style="color:red">Error Loading Data</span>`;
+                console.error("Fetch error:", error);
+                document.getElementById('loading').innerHTML = `
+                    <span style="color:#C07A63">Sandbox CORS restriction detected.</span><br>
+                    <span style="font-size:0.8rem">This code will work correctly on your GitHub Pages repo!</span>`;
             }
         }
 
