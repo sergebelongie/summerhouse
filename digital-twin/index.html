@@ -220,10 +220,13 @@
             // Check if we are running in the sandboxed preview environment (Canvas)
             const isPreview = window.location.protocol === 'blob:';
             
+            // Add a cache-buster so GitHub's 5-minute cache doesn't hide your updates
+            const cacheBuster = `?t=${new Date().getTime()}`;
+            
             // If in preview, redirect the fetch to the raw GitHub user content URL
             const fetchUrl = isPreview ? 
-                `https://raw.githubusercontent.com/sergebelongie/summerhouse/main/digital-twin/${url}` : 
-                url;
+                `https://raw.githubusercontent.com/sergebelongie/summerhouse/main/digital-twin/${url}${cacheBuster}` : 
+                `${url}${cacheBuster}`;
                 
             const res = await fetch(fetchUrl);
             if (!res.ok) throw new Error(`Could not find ${url} (404). Tried URL: ${fetchUrl}`);
