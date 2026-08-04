@@ -265,10 +265,14 @@
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillStyle = '#2C3531'; // Dark text
-            ctx.fillText('N', cx, cy - 210);
-            ctx.fillText('S', cx, cy + 210);
-            ctx.fillText('E', cx + 210, cy);
-            ctx.fillText('W', cx - 210, cy);
+            
+            // Counter-rotate text so it stays upright when the compass is rotated 168 degrees
+            const textRot = -Math.PI * (168 / 180);
+            
+            ctx.save(); ctx.translate(cx, cy - 210); ctx.rotate(textRot); ctx.fillText('N', 0, 0); ctx.restore();
+            ctx.save(); ctx.translate(cx, cy + 210); ctx.rotate(textRot); ctx.fillText('S', 0, 0); ctx.restore();
+            ctx.save(); ctx.translate(cx + 210, cy); ctx.rotate(textRot); ctx.fillText('E', 0, 0); ctx.restore();
+            ctx.save(); ctx.translate(cx - 210, cy); ctx.rotate(textRot); ctx.fillText('W', 0, 0); ctx.restore();
 
             const texture = new THREE.CanvasTexture(canvas);
             // Ensure texture stays crisp when viewed at a low angle
