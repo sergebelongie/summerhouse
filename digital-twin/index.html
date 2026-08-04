@@ -6,7 +6,7 @@
     <title>Gyvelbakken 10 - Digital Twin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { margin: 0; overflow: hidden; background-color: #f8f6f0; font-family: 'Inter', sans-serif; }
+        body { margin: 0; overflow: hidden; background-color: #F8F6F0; font-family: 'Inter', sans-serif; }
         #canvas-container { width: 100vw; height: 100vh; display: block; }
         
         /* UI Panel Styling */
@@ -37,6 +37,7 @@
             padding: 20px;
             border-radius: 8px;
             text-align: center;
+            border: 1px solid #E2DFD7;
         }
         
         /* Photo Overlay Styling */
@@ -82,10 +83,9 @@
 </head>
 <body>
 
-    <!-- UI Overlay -->
     <div id="ui-panel">
         <h1 class="text-xl font-bold text-[#2C3531] mb-1" style="font-family: 'Playfair Display', serif;">Gyvelbakken 10</h1>
-        <p class="text-xs text-[#6B7A74] uppercase tracking-widest font-semibold mb-4">Summer Home 3D</p>
+        <p class="text-xs text-[#6B7A74] uppercase tracking-widest font-semibold mb-4">Digital Twin Viewer</p>
         <div class="text-xs text-[#6B7A74] space-y-2 bg-[#F8F6F0] p-3 rounded-lg border border-[#E2DFD7]">
             <p class="font-semibold text-[#2C3531] mb-1">Navigation Controls:</p>
             <ul class="list-disc pl-4 space-y-1">
@@ -97,11 +97,10 @@
         </div>
         <div class="mt-4 pt-4 border-t border-[#E2DFD7]">
             <p class="text-xs font-semibold text-[#2C3531]">Model Statistics:</p>
-            <p class="text-xs text-[#6B7A74] mt-1" id="data-stats">Loading modular data via fetch()...</p>
+            <p class="text-xs text-[#6B7A74] mt-1" id="data-stats">Fetching JSON data from repository...</p>
         </div>
     </div>
 
-    <!-- Photo Overlay -->
     <div id="photo-overlay">
         <span class="close-btn" onclick="document.getElementById('photo-overlay').style.display='none'">×</span>
         <h3 id="photo-title" class="text-sm font-bold mb-2 text-[#2C3531]">Room Photo</h3>
@@ -118,10 +117,10 @@
 
         const scene = new THREE.Scene();
         scene.background = new THREE.Color('#F8F6F0'); 
-        scene.fog = new THREE.FogExp2('#F8F6F0', 0.015);
 
+        // Camera setup oriented to look at the center of the property (X: 45, Z: 35)
         const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(0, 30, 45); 
+        camera.position.set(45, 60, 110); 
 
         const canvasContainer = document.getElementById('canvas-container');
         const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -134,23 +133,27 @@
         controls.enableDamping = true;
         controls.dampingFactor = 0.05;
         controls.maxPolarAngle = Math.PI / 2 - 0.05;
-        controls.target.set(0, 0, 0);
+        controls.target.set(45, 0, 35);
 
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
         scene.add(ambientLight);
 
         const directionalLight = new THREE.DirectionalLight(0xffffff, 0.6);
-        directionalLight.position.set(15, 30, 20);
+        directionalLight.position.set(20, 50, 80);
         directionalLight.castShadow = true;
+        directionalLight.shadow.camera.left = -50;
+        directionalLight.shadow.camera.right = 50;
+        directionalLight.shadow.camera.top = 50;
+        directionalLight.shadow.camera.bottom = -50;
         directionalLight.shadow.mapSize.width = 2048;
         directionalLight.shadow.mapSize.height = 2048;
         scene.add(directionalLight);
 
-        const groundGeometry = new THREE.PlaneGeometry(200, 200);
+        const groundGeometry = new THREE.PlaneGeometry(300, 300);
         const groundMaterial = new THREE.MeshStandardMaterial({ color: '#DCE4D8', roughness: 0.9 });
         const ground = new THREE.Mesh(groundGeometry, groundMaterial);
         ground.rotation.x = -Math.PI / 2;
-        ground.position.y = -0.1;
+        ground.position.set(45, -0.1, 35);
         ground.receiveShadow = true;
         scene.add(ground);
 
@@ -159,19 +162,20 @@
             const material = new THREE.MeshStandardMaterial({ 
                 color: data.color,
                 transparent: isRoom && data.type !== 'outdoor',
-                opacity: (isRoom && data.type !== 'outdoor') ? 0.7 : 1.0,
+                opacity: (isRoom && data.type !== 'outdoor') ? 0.8 : 1.0,
                 roughness: 0.8
             });
 
             const mesh = new THREE.Mesh(geometry, material);
+            // Positions are pre-centered in the JSON payload for clean Three.js mapping
             mesh.position.set(data.position.x, data.position.y, data.position.z);
             mesh.castShadow = true;
             mesh.receiveShadow = true;
 
-            if (isRoom) {
+            if (isRoom && data.type !== 'outdoor') {
                 const edges = new THREE.EdgesGeometry(geometry);
                 const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ 
-                    color: 0x6B7A74, linewidth: 1, opacity: 0.5, transparent: true
+                    color: 0x6B7A74, linewidth: 1, opacity: 0.4, transparent: true
                 }));
                 mesh.add(line);
             }
@@ -207,47 +211,54 @@
             const material = new THREE.SpriteMaterial({ map: texture, depthTest: false });
             const sprite = new THREE.Sprite(material);
             
-            sprite.position.set(data.position.x, data.position.y + 1, data.position.z);
-            sprite.scale.set(2, 1, 1);
+            sprite.position.set(data.position.x, data.position.y, data.position.z);
+            sprite.scale.set(3, 1.5, 1);
             sprite.userData = { isPhotoMarker: true, photoData: data };
+            
             scene.add(sprite);
             interactableObjects.push(sprite);
         }
 
         async function loadData() {
             try {
-                // Fetching from the separate JSON files to maintain clean architecture
+                // Fetching JSON data dynamically from GitHub repository structure
                 const [roomsRes, furnishingsRes, photosRes, appliancesRes] = await Promise.all([
                     fetch('data/rooms.json'),
                     fetch('data/furnishings.json'),
                     fetch('data/photos.json'),
-                    fetch('data/appliances.json').catch(() => ({ json: () => [] })) // Failsafe if not created yet
+                    fetch('data/appliances.json')
                 ]);
 
-                if (!roomsRes.ok) throw new Error("Could not fetch rooms.json");
+                if (!roomsRes.ok) throw new Error("Could not find data/rooms.json (404)");
+                if (!photosRes.ok) throw new Error("Could not find data/photos.json (404)");
 
                 const roomsData = await roomsRes.json();
                 const furnishingsData = await furnishingsRes.json();
                 const photosData = await photosRes.json();
                 const appliancesData = await appliancesRes.json();
 
-                // Render objects based on JSON payloads
+                // Build Geometry
                 roomsData.forEach(room => createBlock(room, true));
                 furnishingsData.forEach(item => createBlock(item, false));
                 appliancesData.forEach(app => createBlock(app, false));
                 photosData.forEach(photo => createPhotoMarker(photo));
 
                 document.getElementById('data-stats').innerText = 
-                    `${roomsData.length} Rooms/Zones\n` +
-                    `${furnishingsData.length + appliancesData.length} Details\n` +
+                    `${roomsData.length} Architectural zones\n` +
                     `${photosData.length} Photo Markers mapped`;
                 
                 document.getElementById('loading').style.display = 'none';
+
             } catch (error) {
-                console.error("Fetch error:", error);
+                console.error("Initialization Error:", error);
+                
+                // Advanced Error Reporting
                 document.getElementById('loading').innerHTML = `
-                    <span style="color:#C07A63">Sandbox CORS restriction detected.</span><br>
-                    <span style="font-size:0.8rem">This code will work correctly on your GitHub Pages repo!</span>`;
+                    <span style="color:#C07A63; font-size: 1.5rem;">Error Loading 3D Data</span><br>
+                    <span style="font-size:0.9rem; color:#2C3531; font-family: monospace; background: #fff; padding: 4px; border-radius: 4px; display:inline-block; margin-top: 10px;">
+                        ${error.message}
+                    </span><br>
+                    <span style="font-size:0.8rem; display:block; margin-top: 10px;">Check browser console for full stack trace.</span>`;
             }
         }
 
