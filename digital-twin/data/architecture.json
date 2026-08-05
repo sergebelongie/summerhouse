@@ -1,125 +1,18 @@
 {
   "rooms": [
-    {
-      "id": "stue_kokken",
-      "name": "Stue & Kokken",
-      "x": 0,
-      "z": 0,
-      "width": 11.16,
-      "depth": 5.82,
-      "color": "0xaaaaaa",
-      "elevation": 0.01
-    },
-    {
-      "id": "entre",
-      "name": "Entre",
-      "x": 11.16,
-      "z": 0,
-      "width": 4.47,
-      "depth": 2.0,
-      "color": "0xcccccc",
-      "elevation": 0.01
-    },
-    {
-      "id": "wc_bad",
-      "name": "WC/Bad",
-      "x": 13.72,
-      "z": 2.0,
-      "width": 1.91,
-      "depth": 2.3,
-      "color": "0x444444",
-      "elevation": 0.01
-    },
-    {
-      "id": "viktualie",
-      "name": "Viktualie",
-      "x": 13.72,
-      "z": 4.3,
-      "width": 1.91,
-      "depth": 1.52,
-      "color": "0x888888",
-      "elevation": 0.01
-    },
-    {
-      "id": "gang",
-      "name": "Gang",
-      "x": 11.16,
-      "z": 2.0,
-      "width": 2.56,
-      "depth": 3.82,
-      "color": "0xa0a0a0",
-      "elevation": 0.01
-    },
-    {
-      "id": "hallway",
-      "name": "Hallway",
-      "x": 9.42,
-      "z": 5.82,
-      "width": 2.78,
-      "depth": 4.34,
-      "color": "0xdddddd",
-      "elevation": 0.09
-    },
-    {
-      "id": "bedroom_2",
-      "name": "Bedroom 2",
-      "x": 12.2,
-      "z": 5.82,
-      "width": 3.03,
-      "depth": 1.99,
-      "color": "0xd0c0b0",
-      "elevation": 0.09
-    },
-    {
-      "id": "bedroom_1",
-      "name": "Bedroom 1",
-      "x": 12.2,
-      "z": 7.81,
-      "width": 3.03,
-      "depth": 2.35,
-      "color": "0xc0b0a0",
-      "elevation": 0.09
-    },
-    {
-      "id": "master_bedroom",
-      "name": "Master Bedroom",
-      "x": 9.42,
-      "z": 10.16,
-      "width": 3.33,
-      "depth": 4.2,
-      "color": "0xcccccc",
-      "elevation": 0.09
-    },
-    {
-      "id": "garderobe_depot",
-      "name": "Garderobe/Depot",
-      "x": 12.75,
-      "z": 10.16,
-      "width": 2.48,
-      "depth": 4.2,
-      "color": "0xaabbcc",
-      "elevation": 0.09
-    },
-    {
-      "id": "top_bath",
-      "name": "Top Bath",
-      "x": 9.42,
-      "z": 14.36,
-      "width": 3.4,
-      "depth": 2.76,
-      "color": "0xbbaacc",
-      "elevation": 0.09
-    },
-    {
-      "id": "skur",
-      "name": "Skur",
-      "x": 12.82,
-      "z": 14.36,
-      "width": 2.41,
-      "depth": 2.76,
-      "color": "0x555555",
-      "elevation": 0.09
-    }
+    { "id": "stue_kokken", "name": "Stue & Kokken", "x": 0, "z": 0, "width": 11.16, "depth": 5.82, "color": "0xaaaaaa", "elevation": 0.01 },
+    { "id": "entre", "name": "Entre", "x": 11.16, "z": 0, "width": 4.47, "depth": 2.0, "color": "0xcccccc", "elevation": 0.01 },
+    { "id": "wc_bad", "name": "WC/Bad", "x": 13.72, "z": 2.0, "width": 1.91, "depth": 2.3, "color": "0x444444", "elevation": 0.01 },
+    { "id": "viktualie", "name": "Viktualie", "x": 13.72, "z": 4.3, "width": 1.91, "depth": 1.52, "color": "0x888888", "elevation": 0.01 },
+    { "id": "gang", "name": "Gang", "x": 11.16, "z": 2.0, "width": 2.56, "depth": 3.82, "color": "0xa0a0a0", "elevation": 0.01 },
+    { "id": "hallway", "name": "Hallway", "x": 9.42, "z": 5.82, "width": 2.78, "depth": 4.34, "color": "0xdddddd", "elevation": 0.09 },
+    { "id": "bedroom_2", "name": "Bedroom 2", "x": 12.2, "z": 5.82, "width": 3.03, "depth": 1.99, "color": "0xd0c0b0", "elevation": 0.09 },
+    { "id": "bedroom_1", "name": "Bedroom 1", "x": 12.2, "z": 7.81, "width": 3.03, "depth": 2.35, "color": "0xc0b0a0", "elevation": 0.09 },
+    { "id": "master_bedroom", "name": "Master Bedroom", "x": 9.42, "z": 10.16, "width": 3.33, "depth": 4.2, "color": "0xcccccc", "elevation": 0.09 },
+    { "id": "garderobe_depot", "name": "Garderobe/Depot", "x": 12.75, "z": 10.16, "width": 2.48, "depth": 4.2, "color": "0xaabbcc", "elevation": 0.09 },
+    { "id": "top_bath", "name": "Top Bath", "x": 9.42, "z": 14.36, "width": 3.4, "depth": 2.76, "color": "0xbbaacc", "elevation": 0.09 },
+    { "id": "skur", "name": "Skur", "x": 12.82, "z": 14.36, "width": 2.41, "depth": 2.76, "color": "0x555555", "elevation": 0.09 },
+    { "id": "terrace_step", "name": "Terrace Step", "x": 9.42, "z": -5.87, "width": 5.81, "depth": 0.05, "color": "0x8B5A2B", "elevation": 0.05 }
   ],
   "walls": [
     { "x": -0.1, "z": -0.1, "w": 0.9, "d": 0.1, "isExterior": true },
@@ -142,6 +35,38 @@
     { "x": 9.42, "z": 6.5, "w": 0.1, "d": 3.0, "h": 0.4, "yOffset": 2.1, "isExterior": true },
     { "x": 9.42, "z": 9.5, "w": 0.1, "d": 0.66, "isExterior": true },
     { "x": 9.42, "z": 10.16, "w": 0.1, "d": 6.96, "isExterior": true },
-    { "x": 9.42, "z": 17.12, "w": 5.91, "d": 0.1, "isExterior": true }
+    { "x": 9.42, "z": 17.12, "w": 5.91, "d": 0.1, "isExterior": true },
+    { "x": 15.63, "z": -0.1, "w": 0.1, "d": 2.9, "isExterior": true },
+    { "x": 15.63, "z": 2.8, "w": 0.1, "d": 0.8, "h": 1.2, "isExterior": true },
+    { "x": 15.63, "z": 2.8, "w": 0.1, "d": 0.8, "h": 0.7, "yOffset": 1.8, "isExterior": true },
+    { "x": 15.63, "z": 3.6, "w": 0.1, "d": 2.22, "isExterior": true },
+    { "x": 15.23, "z": 5.82, "w": 0.5, "d": 0.1, "isExterior": true },
+    { "x": 15.23, "z": 5.82, "w": 0.1, "d": 0.48, "isExterior": true },
+    { "x": 15.23, "z": 6.3, "w": 0.1, "d": 1.0, "h": 1.0, "isExterior": true },
+    { "x": 15.23, "z": 6.3, "w": 0.1, "d": 1.0, "h": 0.4, "yOffset": 2.1, "isExterior": true },
+    { "x": 15.23, "z": 7.3, "w": 0.1, "d": 1.1, "isExterior": true },
+    { "x": 15.23, "z": 8.4, "w": 0.1, "d": 1.0, "h": 1.0, "isExterior": true },
+    { "x": 15.23, "z": 8.4, "w": 0.1, "d": 1.0, "h": 0.4, "yOffset": 2.1, "isExterior": true },
+    { "x": 15.23, "z": 9.4, "w": 0.1, "d": 7.82, "isExterior": true },
+    { "x": 11.16, "z": 0, "w": 0.1, "d": 2.0, "isExterior": false },
+    { "x": 13.72, "z": 2.0, "w": 0.2, "d": 0.1, "isExterior": false },
+    { "x": 13.92, "z": 2.0, "w": 0.8, "d": 0.1, "h": 0.4, "yOffset": 2.1, "isExterior": false },
+    { "x": 14.72, "z": 2.0, "w": 0.91, "d": 0.1, "isExterior": false },
+    { "x": 13.72, "z": 2.0, "w": 0.1, "d": 2.3, "isExterior": false },
+    { "x": 13.72, "z": 4.3, "w": 0.1, "d": 0.9, "h": 0.4, "yOffset": 2.1, "isExterior": false },
+    { "x": 13.72, "z": 5.2, "w": 0.1, "d": 0.62, "isExterior": false },
+    { "x": 13.72, "z": 4.3, "w": 1.91, "d": 0.1, "isExterior": false },
+    { "x": 12.2, "z": 5.82, "w": 3.03, "d": 0.1, "isExterior": false },
+    { "x": 12.2, "z": 5.82, "w": 0.1, "d": 0.28, "isExterior": false },
+    { "x": 12.2, "z": 6.1, "w": 0.1, "d": 0.9, "h": 0.4, "yOffset": 2.1, "isExterior": false },
+    { "x": 12.2, "z": 7.0, "w": 0.1, "d": 1.1, "isExterior": false },
+    { "x": 12.2, "z": 8.1, "w": 0.1, "d": 0.9, "h": 0.4, "yOffset": 2.1, "isExterior": false },
+    { "x": 12.2, "z": 9.0, "w": 0.1, "d": 1.16, "isExterior": false },
+    { "x": 12.2, "z": 8.16, "w": 3.03, "d": 0.1, "isExterior": false },
+    { "x": 9.42, "z": 10.16, "w": 5.81, "d": 0.1, "isExterior": false },
+    { "x": 12.75, "z": 10.16, "w": 0.1, "d": 4.2, "isExterior": false },
+    { "x": 9.42, "z": 14.36, "w": 5.81, "d": 0.1, "isExterior": false },
+    { "x": 12.82, "z": 14.36, "w": 0.1, "d": 2.76, "isExterior": false },
+    { "x": 12.96, "z": 5.81, "w": 1.52, "d": 0.01, "h": 2.5, "yOffset": 0, "color": "0xcca92c", "isExterior": false } 
   ]
 }

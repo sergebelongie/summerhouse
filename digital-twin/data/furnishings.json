@@ -1,1 +1,57 @@
-[{"id": "f_stue_sofa_left","room_id": "main_stue","name": "Lounge Sofa (Left)","dimensions": { "w": 3.0, "h": 0.6, "d": 8.0 },"position": { "x": 28.0, "y": 0.3, "z": 63.0 },"color": "#D4C4B0"},{"id": "f_stue_sofa_right","room_id": "main_stue","name": "Lounge Sofa (Right)","dimensions": { "w": 3.0, "h": 0.6, "d": 8.0 },"position": { "x": 40.0, "y": 0.3, "z": 63.0 },"color": "#D4C4B0"},{"id": "f_stue_coffee_table","room_id": "main_stue","name": "Coffee Table","dimensions": { "w": 4.0, "h": 0.4, "d": 5.0 },"position": { "x": 34.0, "y": 0.2, "z": 63.0 },"color": "#EFE6D5"},{"id": "f_stue_tv_fireplace","room_id": "main_stue","name": "TV & Fireplace Wall","dimensions": { "w": 12.0, "h": 1.5, "d": 1.0 },"position": { "x": 34.0, "y": 0.75, "z": 51.5 },"color": "#1A1F1C"},{"id": "f_dining_table_indoor","room_id": "main_kokken","name": "Indoor Dining Table","dimensions": { "w": 8.0, "h": 0.75, "d": 4.0 },"position": { "x": 53.0, "y": 0.375, "z": 55.0 },"color": "#CBB499"},{"id": "f_kitchen_island","room_id": "main_kokken","name": "Kitchen Island & Stove","dimensions": { "w": 10.0, "h": 0.9, "d": 3.0 },"position": { "x": 53.0, "y": 0.45, "z": 68.0 },"color": "#FFFFFF"},{"id": "f_master_bed","room_id": "main_master_bed","name": "Master Bed","dimensions": { "w": 4.5, "h": 0.5, "d": 5.0 },"position": { "x": 62.5, "y": 0.25, "z": 29.25 },"color": "#FFFFFF"},{"id": "f_guest1_bed","room_id": "main_bed2","name": "Guest Bed 1","dimensions": { "w": 4.5, "h": 0.5, "d": 5.0 },"position": { "x": 69.0, "y": 0.25, "z": 37.6 },"color": "#FFFFFF"},{"id": "f_guest2_bed","room_id": "main_bed3","name": "Guest Bed 2","dimensions": { "w": 4.5, "h": 0.5, "d": 5.0 },"position": { "x": 69.0, "y": 0.25, "z": 45.8 },"color": "#FFFFFF"},{"id": "f_annex1_bed","room_id": "annex_room1","name": "Annex Guest Bed 1","dimensions": { "w": 4.5, "h": 0.5, "d": 5.0 },"position": { "x": 28.0, "y": 0.25, "z": 13.25 },"color": "#FFFFFF"},{"id": "f_annex2_bed","room_id": "annex_room2","name": "Annex Guest Bed 2","dimensions": { "w": 4.5, "h": 0.5, "d": 5.0 },"position": { "x": 28.0, "y": 0.25, "z": 24.25 },"color": "#FFFFFF"},{"id": "f_outdoor_dining_table","room_id": "courtyard_terrace","name": "Terrace Dining Table","dimensions": { "w": 8.0, "h": 0.75, "d": 4.0 },"position": { "x": 48.0, "y": 0.375, "z": 41.5 },"color": "#CBB499"},{"id": "f_trampoline","room_id": "outdoor","name": "Trampoline","dimensions": { "w": 8.0, "h": 0.6, "d": 8.0 },"position": { "x": 45.0, "y": 0.3, "z": 10.0 },"color": "#343E38"}]
+{
+  "items": [
+    { "name": "Fireplace Base", "w": 1.1, "h": 0.1, "d": 2.5, "x": 6.62, "y": 0.05, "z": -4.62, "color": "0x3b3d40" },
+    { "name": "Fireplace East Solid", "w": 0.5, "h": 0.8, "d": 2.4, "x": 6.37, "y": 0.5, "z": -4.62, "color": "0x3b3d40" },
+    { "name": "Fireplace West Pillar 1", "w": 0.5, "h": 0.8, "d": 0.3, "x": 6.87, "y": 0.5, "z": -3.57, "color": "0x3b3d40" },
+    { "name": "Fireplace West Pillar 2", "w": 0.5, "h": 0.8, "d": 0.5, "x": 6.87, "y": 0.5, "z": -4.62, "color": "0x3b3d40" },
+    { "name": "Fireplace West Pillar 3", "w": 0.5, "h": 0.8, "d": 0.3, "x": 6.87, "y": 0.5, "z": -5.67, "color": "0x3b3d40" },
+    { "name": "Fireplace Mid 1", "w": 1.0, "h": 0.7, "d": 0.8, "x": 6.62, "y": 1.25, "z": -3.82, "color": "0x3b3d40" },
+    { "name": "Fireplace Mid 2", "w": 1.0, "h": 0.7, "d": 0.8, "x": 6.62, "y": 1.25, "z": -5.42, "color": "0x3b3d40" },
+    { "name": "Fireplace Top", "w": 1.0, "h": 0.9, "d": 2.4, "x": 6.62, "y": 2.05, "z": -4.62, "color": "0x3b3d40" },
+    { "name": "Firebox Frame", "w": 1.02, "h": 0.6, "d": 0.7, "x": 6.62, "y": 1.25, "z": -4.62, "color": "0x111111" },
+    { "name": "Firebox Glass", "w": 1.03, "h": 0.5, "d": 0.6, "x": 6.62, "y": 1.25, "z": -4.62, "color": "0xffa500", "opacity": 0.3, "transparent": true },
+    { "name": "Fireplace Vent", "w": 0.5, "h": 0.05, "d": 0.05, "x": 6.62, "y": 2.1, "z": -3.40, "color": "0x111111" },
+    
+    { "name": "Exterior Double Door", "w": 2.0, "h": 2.1, "d": 0.05, "x": 1.8, "y": 1.05, "z": -0.05, "color": "0x333333", "opacity": 0.7, "transparent": true },
+    { "name": "Exterior Tall Window", "w": 1.0, "h": 2.1, "d": 0.05, "x": 3.8, "y": 1.05, "z": -0.05, "color": "0x333333", "opacity": 0.7, "transparent": true },
+    { "name": "Exterior Single Door", "w": 0.9, "h": 2.1, "d": 0.05, "x": 5.75, "y": 1.05, "z": -0.05, "color": "0x333333", "opacity": 0.7, "transparent": true },
+    { "name": "Kitchen Window", "w": 3.0, "h": 1.1, "d": 0.05, "x": 9.0, "y": 1.55, "z": -0.05, "color": "0x333333", "opacity": 0.7, "transparent": true },
+    { "name": "Front Door", "w": 0.9, "h": 2.1, "d": 0.05, "x": 12.45, "y": 1.05, "z": -0.05, "color": "0xffffff", "opacity": 0.5, "transparent": true },
+    { "name": "WC Window", "w": 0.05, "h": 0.6, "d": 0.8, "x": 15.68, "y": 1.5, "z": -3.2, "color": "0xffffff", "opacity": 0.5, "transparent": true },
+    { "name": "Bedroom 2 Window", "w": 0.05, "h": 1.0, "d": 1.0, "x": 15.28, "y": 1.5, "z": -6.8, "color": "0x333333", "opacity": 0.7, "transparent": true },
+    { "name": "Bedroom 1 Window", "w": 0.05, "h": 1.0, "d": 1.0, "x": 15.28, "y": 1.5, "z": -8.9, "color": "0x333333", "opacity": 0.7, "transparent": true },
+    { "name": "Hallway Triple Door", "w": 0.05, "h": 2.1, "d": 3.0, "x": 9.42, "y": 1.14, "z": -8.0, "color": "0x333333", "opacity": 0.7, "transparent": true },
+    { "name": "South Kitchen Double Door", "w": 1.6, "h": 2.1, "d": 0.05, "x": 8.2, "y": 1.05, "z": -5.82, "color": "0x333333", "opacity": 0.7, "transparent": true },
+
+    { "name": "Lower Kitchen Cabinets", "w": 3.66, "h": 0.87, "d": 0.65, "x": 9.33, "y": 0.435, "z": -0.425, "color": "0x5a5e55" },
+    { "name": "Kitchen Counter", "w": 3.66, "h": 0.03, "d": 0.66, "x": 9.33, "y": 0.885, "z": -0.43, "color": "0x222222" },
+    { "name": "Tall Kitchen Cabinet", "w": 0.65, "h": 2.27, "d": 0.65, "x": 10.835, "y": 1.135, "z": -0.425, "color": "0x5a5e55" },
+    { "name": "Oven", "w": 0.6, "h": 0.6, "d": 0.05, "x": 8.5, "y": 0.45, "z": -0.725, "color": "0x111111" },
+    { "name": "Range Hood", "w": 0.9, "h": 0.05, "d": 0.5, "x": 8.5, "y": 2.26, "z": -0.4, "color": "0x888888" },
+    
+    { "name": "Electrical Panel", "w": 0.4, "h": 0.6, "d": 0.1, "x": 14.5, "y": 1.2, "z": 0.05, "color": "0x999999" },
+    { "name": "EV Charger", "w": 0.2, "h": 0.3, "d": 0.1, "x": 15.2, "y": 1.2, "z": 0.05, "color": "0x222222" },
+    { "name": "Entrance Bench Top", "w": 0.4, "h": 0.1, "d": 0.9, "x": 11.4, "y": 0.4, "z": -1.2, "color": "0x222222" },
+    { "name": "Sliding Door 1", "w": 0.05, "h": 2.27, "d": 1.0, "x": 15.0, "y": 1.135, "z": -0.5, "color": "0xeeeeee" },
+    { "name": "Sliding Door 2", "w": 0.05, "h": 2.27, "d": 1.0, "x": 15.05, "y": 1.135, "z": -1.5, "color": "0xeeeeee" },
+    { "name": "Fridge", "w": 0.45, "h": 0.85, "d": 0.5, "x": 15.3, "y": 0.425, "z": -0.6, "color": "0xffffff" },
+    { "name": "Shoe Rack", "w": 0.3, "h": 0.3, "d": 0.8, "x": 14.7, "y": 0.15, "z": -0.5, "color": "0xc19a6b" },
+    
+    { "name": "Sideboard", "w": 0.35, "h": 0.8, "d": 1.2, "x": 13.52, "y": 0.4, "z": -3.2, "color": "0x111111" },
+    { "name": "AC Unit", "w": 0.2, "h": 0.3, "d": 0.8, "x": 13.6, "y": 2.0, "z": -3.2, "color": "0xffffff" },
+    { "name": "Black Leather Chair", "w": 0.6, "h": 0.4, "d": 0.7, "x": 11.5, "y": 0.4, "z": -7.5, "color": "0x111111" },
+    { "name": "Sheepskin Throw", "w": 0.5, "h": 0.1, "d": 0.6, "x": 11.5, "y": 0.65, "z": -7.5, "color": "0xfffae6" },
+    { "name": "Wicker Chair", "w": 0.4, "h": 0.3, "d": 0.4, "x": 11.3, "y": 0.3, "z": -6.8, "color": "0x8b5a2b" },
+    { "name": "Stereo Box", "w": 0.3, "h": 0.4, "d": 0.5, "x": 9.65, "y": 1.2, "z": -6.16, "color": "0x111111" },
+    { "name": "Grey Speaker", "w": 0.2, "h": 0.3, "d": 0.2, "x": 9.2, "y": 2.2, "z": -5.65, "color": "0x888888" },
+    
+    { "name": "Left Slat Wall Block", "w": 0.25, "h": 2.5, "d": 0.05, "x": 7.275, "y": 1.25, "z": -5.74, "color": "0xcca97c" },
+    { "name": "Right Slat Wall Block", "w": 0.42, "h": 2.5, "d": 0.05, "x": 9.21, "y": 1.25, "z": -5.74, "color": "0xcca97c" },
+    { "name": "Top Slat Wall Block", "w": 1.6, "h": 0.4, "d": 0.05, "x": 8.2, "y": 2.3, "z": -5.74, "color": "0xcca97c" },
+    { "name": "Living Room Slat Wall Block", "w": 0.05, "h": 2.27, "d": 0.68, "x": 9.47, "y": 1.225, "z": -6.16, "color": "0x704214" },
+    
+    { "name": "Toilet", "w": 0.4, "h": 0.45, "d": 0.6, "x": 15.3, "y": 0.225, "z": -3.2, "color": "0xffffff" },
+    { "name": "Sink", "w": 0.4, "h": 0.15, "d": 0.5, "x": 14.0, "y": 0.8, "z": -3.2, "color": "0xffffff" },
+    { "name": "Bathroom Cabinet", "w": 0.2, "h": 0.6, "d": 0.4, "x": 13.9, "y": 1.4, "z": -3.9, "color": "0xdd8888" }
+  ]
+}
