@@ -1,0 +1,63 @@
+{
+  "items": [
+    {
+      "id": "wc_toilet",
+      "name": "Wall-Hung Toilet",
+      "w": 0.55, "h": 0.4, "d": 0.36,
+      "x": 15.35, "y": 0.2, "z": 3.2,
+      "color": "0xffffff"
+    },
+    {
+      "id": "wc_sink",
+      "name": "Floating Washbasin",
+      "w": 0.35, "h": 0.15, "d": 0.6,
+      "x": 13.9, "y": 0.8, "z": 2.8,
+      "color": "0xffffff"
+    },
+    {
+      "id": "wc_mirror",
+      "name": "Round Mirror",
+      "w": 0.02, "h": 0.7, "d": 0.7,
+      "x": 13.73, "y": 1.4, "z": 2.8,
+      "color": "0xadd8e6" 
+    },
+    {
+      "id": "wc_pink_cabinet",
+      "name": "Pink Wall Cabinet",
+      "w": 0.2, "h": 0.5, "d": 0.4,
+      "x": 13.82, "y": 1.2, "z": 3.6,
+      "color": "0xdd8888"
+    },
+    {
+      "id": "wc_shower_glass",
+      "name": "Shower Partition",
+      "w": 1.0, "h": 2.1, "d": 0.02,
+      "x": 14.22, "y": 1.05, "z": 3.8,
+      "color": "0x222222",
+      "transparent": true,
+      "opacity": 0.4
+    },
+    {
+      "id": "hallway_painting_pink",
+      "name": "Pink Floral Painting",
+      "w": 0.02, 
+      "h": 1.2, 
+      "d": 0.8,
+      "x": 12.19, 
+      "y": 1.4, 
+      "z": 7.8,
+      "color": "0xff66a3"
+    },
+    {
+      "id": "hallway_floating_shelf",
+      "name": "Black Floating Cubby",
+      "w": 0.3, 
+      "h": 0.4, 
+      "d": 0.6,
+      "x": 9.57, 
+      "y": 1.1, 
+      "z": 7.8,
+      "color": "0x222222"
+    }
+  ]
+}

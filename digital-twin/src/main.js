@@ -67,7 +67,9 @@ const wallLabelGroup = new THREE.Group();
 const furnitureLabelGroup = new THREE.Group();
 const furnishingsGroup = new THREE.Group();
 const ceilingGroup = new THREE.Group();
-const lightsGroup = new THREE.Group(); // New group for JSON lighting
+const lightsGroup = new THREE.Group(); 
+const fixturesGroup = new THREE.Group();
+const fixtureLabelGroup = new THREE.Group();
 
 scene.add(roomLabelGroup);
 scene.add(wallLabelGroup);
@@ -75,19 +77,23 @@ scene.add(furnitureLabelGroup);
 scene.add(furnishingsGroup);
 scene.add(ceilingGroup);
 scene.add(lightsGroup);
+scene.add(fixturesGroup);
+scene.add(fixtureLabelGroup);
 
 // 2. Data Loading & Building
 async function initDigitalTwin() {
     try {
-        const [archRes, furnRes, lightRes] = await Promise.all([
+        const [archRes, furnRes, lightRes, fixRes] = await Promise.all([
             fetch('./data/architecture.json'),
             fetch('./data/furnishings.json').catch(() => null),
-            fetch('./data/lighting.json').catch(() => null)
+            fetch('./data/lighting.json').catch(() => null),
+            fetch('./data/fixtures.json').catch(() => null)
         ]);
 
         const archData = await archRes.json();
         const furnData = (furnRes && furnRes.ok) ? await furnRes.json() : { items: [] };
         const lightData = (lightRes && lightRes.ok) ? await lightRes.json() : { lights: [] };
+        const fixData = (fixRes && fixRes.ok) ? await fixRes.json() : { items: [] };
 
         const houseGroup = new THREE.Group();
 
@@ -127,13 +133,28 @@ async function initDigitalTwin() {
             }
             const material = new THREE.MeshLambertMaterial(matOptions);
             const mesh = new THREE.Mesh(geometry, material);
-            mesh.position.set(item.x, item.y, item.z);
+            mesh.position.set(item.x, item.y, -item.z);
             if (item.rotationY) mesh.rotation.y = item.rotationY;
             furnishingsGroup.add(mesh);
         });
 
+        // Build Fixtures
+        fixData.items.forEach(item => {
+            const geometry = new THREE.BoxGeometry(item.w, item.h, item.d);
+            const matOptions = { color: parseInt(item.color, 16) };
+            if (item.transparent) {
+                matOptions.transparent = true;
+                matOptions.opacity = item.opacity !== undefined ? item.opacity : 0.5;
+            }
+            const material = new THREE.MeshLambertMaterial(matOptions);
+            const mesh = new THREE.Mesh(geometry, material);
+            mesh.position.set(item.x, item.y, -item.z);
+            if (item.rotationY) mesh.rotation.y = item.rotationY;
+            fixturesGroup.add(mesh);
+        });
+
         // Generate Labels, Roofs, and Lights
-        buildLabels(archData.rooms, furnData.items, archData.walls);
+        buildLabels(archData.rooms, furnData.items, fixData.items, archData.walls);
         buildRoofsAndCeilings();
         buildLights(lightData.lights);
 
@@ -145,7 +166,6 @@ async function initDigitalTwin() {
 // 3. Labels, Roof, and Lights Functions
 function buildLights(lights) {
     if (!lights || lights.length === 0) {
-        // Fallback lighting just in case the JSON fails to load
         const fallbackAmbient = new THREE.AmbientLight(0xffffff, 0.6);
         const fallbackDir = new THREE.DirectionalLight(0xffffff, 0.8);
         fallbackDir.position.set(20, 30, -20);
@@ -163,25 +183,21 @@ function buildLights(lights) {
         } else if (l.type === 'directional') {
             lightObj = new THREE.DirectionalLight(color, l.intensity);
             lightObj.position.set(l.x, l.y, l.z);
-       // ... inside buildLights() ...
-    } else if (l.type === 'point') {
-        lightObj = new THREE.PointLight(color, l.intensity, l.distance);
-        
-        // Add the minus sign to l.z right here!
-        lightObj.position.set(l.x, l.y, -l.z); 
-        
-        // Create a tiny visible bulb for point lights to help with placement
-        const bulbGeo = new THREE.SphereGeometry(0.05, 8, 8);
-        const bulbMat = new THREE.MeshBasicMaterial({ color: color });
-        const bulbMesh = new THREE.Mesh(bulbGeo, bulbMat);
-        lightObj.add(bulbMesh); 
-    }
+        } else if (l.type === 'point') {
+            lightObj = new THREE.PointLight(color, l.intensity, l.distance);
+            lightObj.position.set(l.x, l.y, -l.z); 
+            
+            const bulbGeo = new THREE.SphereGeometry(0.05, 8, 8);
+            const bulbMat = new THREE.MeshBasicMaterial({ color: color });
+            const bulbMesh = new THREE.Mesh(bulbGeo, bulbMat);
+            lightObj.add(bulbMesh); 
+        }
 
         if (lightObj) lightsGroup.add(lightObj);
     });
 }
 
-function buildLabels(rooms, items, walls) {
+function buildLabels(rooms, furnItems, fixItems, walls) {
     const loader = new FontLoader();
     loader.load('https://unpkg.com/three@0.136.0/examples/fonts/helvetiker_regular.typeface.json', (font) => {
         
@@ -236,14 +252,26 @@ function buildLabels(rooms, items, walls) {
         });
 
         const furnMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
-        items.forEach(item => {
+        furnItems.forEach(item => {
             if (item.name) {
                 const textGeo = new TextGeometry(item.name, { font: font, size: 0.15, height: 0.01 });
                 textGeo.computeBoundingBox();
                 const w = textGeo.boundingBox.max.x - textGeo.boundingBox.min.x;
                 const mesh = new THREE.Mesh(textGeo, furnMat);
-                mesh.position.set(item.x - w/2, item.y + (item.h/2) + 0.1, item.z);
+                mesh.position.set(item.x - w/2, item.y + (item.h/2) + 0.1, -item.z);
                 furnitureLabelGroup.add(mesh);
+            }
+        });
+
+        const fixMat = new THREE.MeshBasicMaterial({ color: 0xffffaa });
+        fixItems.forEach(item => {
+            if (item.name) {
+                const textGeo = new TextGeometry(item.name, { font: font, size: 0.15, height: 0.01 });
+                textGeo.computeBoundingBox();
+                const w = textGeo.boundingBox.max.x - textGeo.boundingBox.min.x;
+                const mesh = new THREE.Mesh(textGeo, fixMat);
+                mesh.position.set(item.x - w/2, item.y + (item.h/2) + 0.1, -item.z);
+                fixtureLabelGroup.add(mesh);
             }
         });
     });
@@ -336,7 +364,9 @@ window.addEventListener('keydown', (event) => {
         case 'KeyK': furnitureLabelGroup.visible = !furnitureLabelGroup.visible; break;
         case 'KeyF': furnishingsGroup.visible = !furnishingsGroup.visible; break;
         case 'KeyC': ceilingGroup.visible = !ceilingGroup.visible; break;
-        case 'KeyI': lightsGroup.visible = !lightsGroup.visible; break; // Toggle JSON Lights
+        case 'KeyI': lightsGroup.visible = !lightsGroup.visible; break;
+        case 'KeyX': fixturesGroup.visible = !fixturesGroup.visible; break; 
+        case 'KeyJ': fixtureLabelGroup.visible = !fixtureLabelGroup.visible; break;
     }
 });
 

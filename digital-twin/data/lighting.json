@@ -4,46 +4,94 @@
       "name": "Global Ambient",
       "type": "ambient", 
       "color": "0xffffff", 
-      "intensity": 0.5 
+      "intensity": 0.4 
     },
     { 
       "name": "Sunlight",
       "type": "directional", 
       "color": "0xffffff", 
-      "intensity": 0.5, 
+      "intensity": 0.6, 
       "x": 20, "y": 30, "z": -20 
     },
     { 
-      "name": "Beacon: Front-Left", 
+      "name": "LED Can (Left of Hood)",
       "type": "point", 
-      "color": "0x0000ff", 
-      "intensity": 2.0, 
-      "distance": 10.0,
-      "x": 0.0, "y": 4.0, "z": 0.0 
+      "color": "0xfff1e0", 
+      "intensity": 0.4, 
+      "distance": 3.0,
+      "x": 7.78, "y": 2.26, "z": 0.43 
     },
     { 
-      "name": "Beacon: Front-Right", 
+      "name": "LED Can 1 (Right of Hood)",
       "type": "point", 
-      "color": "0xff0000", 
-      "intensity": 2.0, 
-      "distance": 10.0,
-      "x": 15.63, "y": 4.0, "z": 0.0 
+      "color": "0xfff1e0", 
+      "intensity": 0.4, 
+      "distance": 3.0,
+      "x": 9.26, "y": 2.26, "z": 0.43 
     },
     { 
-      "name": "Beacon: Back-Left", 
+      "name": "LED Can 2",
       "type": "point", 
-      "color": "0x00ff00", 
-      "intensity": 2.0, 
-      "distance": 10.0,
-      "x": 0.0, "y": 4.0, "z": 17.12 
+      "color": "0xfff1e0", 
+      "intensity": 0.4, 
+      "distance": 3.0,
+      "x": 9.57, "y": 2.26, "z": 0.43 
     },
     { 
-      "name": "Beacon: Back-Right", 
+      "name": "LED Can 3",
       "type": "point", 
-      "color": "0xffff00", 
-      "intensity": 2.0, 
-      "distance": 10.0,
-      "x": 15.63, "y": 4.0, "z": 17.12 
+      "color": "0xfff1e0", 
+      "intensity": 0.4, 
+      "distance": 3.0,
+      "x": 9.88, "y": 2.26, "z": 0.43 
+    },
+    { 
+      "name": "LED Can 4",
+      "type": "point", 
+      "color": "0xfff1e0", 
+      "intensity": 0.4, 
+      "distance": 3.0,
+      "x": 10.19, "y": 2.26, "z": 0.43 
+    },
+    { 
+      "name": "Kitchen Island Pendant",
+      "type": "point", 
+      "color": "0xffeedd", 
+      "intensity": 0.8, 
+      "distance": 7.0,
+      "x": 5.5, "y": 2.0, "z": 2.9 
+    },
+    { 
+      "name": "WC/Bad Can 1 (Front-Left)",
+      "type": "point", 
+      "color": "0xffeedd", 
+      "intensity": 0.5, 
+      "distance": 3.0,
+      "x": 14.15, "y": 2.26, "z": 2.5 
+    },
+    { 
+      "name": "WC/Bad Can 2 (Front-Right)",
+      "type": "point", 
+      "color": "0xffeedd", 
+      "intensity": 0.5, 
+      "distance": 3.0,
+      "x": 15.15, "y": 2.26, "z": 2.5 
+    },
+    { 
+      "name": "WC/Bad Can 3 (Back-Left)",
+      "type": "point", 
+      "color": "0xffeedd", 
+      "intensity": 0.5, 
+      "distance": 3.0,
+      "x": 14.15, "y": 2.26, "z": 3.8 
+    },
+    { 
+      "name": "WC/Bad Can 4 (Back-Right)",
+      "type": "point", 
+      "color": "0xffeedd", 
+      "intensity": 0.5, 
+      "distance": 3.0,
+      "x": 15.15, "y": 2.26, "z": 3.8 
     }
   ]
 }
