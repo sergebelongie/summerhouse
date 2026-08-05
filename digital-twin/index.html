@@ -8,19 +8,10 @@
     <style>
         body { margin: 0; overflow: hidden; background-color: #87CEEB; font-family: 'Inter', sans-serif; }
         canvas { display: block; width: 100vw; height: 100vh; }
-        /* Keep your existing UI styles here */
-        #instructions { /* ... */ }
-        #crosshair { /* ... */ }
     </style>
 </head>
 <body>
-    <!-- Your existing UI divs -->
-    <div id="instructions" class="backdrop-blur-sm shadow-xl border border-gray-600">
-        <!-- ... -->
-    </div>
-    <div id="crosshair"></div>
-
-    <!-- The crucial change: loading your logic externally -->
+    <!-- This links to your newly created script -->
     <script type="module" src="./src/main.js"></script>
 </body>
 </html>
