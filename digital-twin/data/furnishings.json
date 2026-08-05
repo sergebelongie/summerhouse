@@ -52,6 +52,8 @@
     
     { "name": "Toilet", "w": 0.4, "h": 0.45, "d": 0.6, "x": 15.3, "y": 0.225, "z": -3.2, "color": "0xffffff" },
     { "name": "Sink", "w": 0.4, "h": 0.15, "d": 0.5, "x": 14.0, "y": 0.8, "z": -3.2, "color": "0xffffff" },
-    { "name": "Bathroom Cabinet", "w": 0.2, "h": 0.6, "d": 0.4, "x": 13.9, "y": 1.4, "z": -3.9, "color": "0xdd8888" }
+    { "name": "Bathroom Cabinet", "w": 0.2, "h": 0.6, "d": 0.4, "x": 13.9, "y": 1.4, "z": -3.9, "color": "0xdd8888" },
+
+    { "name": "Hallway Step Riser", "w": 5.81, "h": 0.08, "d": 0.05, "x": 12.325, "y": 0.05, "z": -5.82, "color": "0x8B5A2B" }
   ]
 }
