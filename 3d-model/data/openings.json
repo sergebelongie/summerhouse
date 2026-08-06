@@ -1,0 +1,25 @@
+[
+  { "name": "Door - Main Entrance", "type": "door", "w": 0.90, "h": 2.10, "d": 0.20, "x": 12.55, "y": 0.10, "z": 0.00, "color": "#8b4513" },
+  { "name": "Door - Køkken South", "type": "door", "w": 0.90, "h": 2.10, "d": 0.20, "x": 8.45, "y": 0.10, "z": 0.00, "color": "#8b4513" },
+  { "name": "Door - Køkken North Double", "type": "door", "w": 1.80, "h": 2.10, "d": 0.20, "x": 8.00, "y": 0.10, "z": 5.62, "color": "#8b4513" },
+  { "name": "Door - Stue North", "type": "door", "w": 0.90, "h": 2.10, "d": 0.20, "x": 0.55, "y": 0.10, "z": 5.62, "color": "#8b4513" },
+  { "name": "Door - Stue West", "type": "door", "w": 0.20, "h": 2.10, "d": 0.90, "x": 0.00, "y": 0.10, "z": 2.35, "color": "#8b4513" },
+  { "name": "Door - Master Double West", "type": "door", "w": 0.20, "h": 2.10, "d": 1.80, "x": 9.42, "y": 0.10, "z": 11.50, "color": "#8b4513" },
+  { "name": "Door - Skur North", "type": "door", "w": 0.90, "h": 2.10, "d": 0.20, "x": 14.05, "y": 0.10, "z": 16.32, "color": "#8b4513" },
+
+  { "name": "Int Door - WC/Bad", "type": "door", "w": 0.10, "h": 2.10, "d": 0.90, "x": 12.20, "y": 0.10, "z": 2.05, "color": "#a0522d" },
+  { "name": "Int Door - Viktualie", "type": "door", "w": 0.10, "h": 2.10, "d": 0.90, "x": 12.20, "y": 0.10, "z": 4.45, "color": "#a0522d" },
+  { "name": "Int Door - Bedroom 2", "type": "door", "w": 0.10, "h": 2.10, "d": 0.90, "x": 12.20, "y": 0.10, "z": 6.30, "color": "#a0522d" },
+  { "name": "Int Door - Bedroom 1", "type": "door", "w": 0.10, "h": 2.10, "d": 0.90, "x": 12.20, "y": 0.10, "z": 9.85, "color": "#a0522d" },
+  { "name": "Int Door - Master Entry", "type": "door", "w": 0.90, "h": 2.10, "d": 0.10, "x": 10.35, "y": 0.10, "z": 10.57, "color": "#a0522d" },
+  { "name": "Int Door - Garderobe", "type": "door", "w": 0.90, "h": 2.10, "d": 0.10, "x": 12.94, "y": 0.10, "z": 11.00, "color": "#a0522d" },
+  { "name": "Int Door - Master Bath", "type": "door", "w": 0.90, "h": 2.10, "d": 0.10, "x": 10.55, "y": 0.10, "z": 13.66, "color": "#a0522d" },
+  { "name": "Int Door - Sauna", "type": "door", "w": 0.10, "h": 2.10, "d": 0.90, "x": 12.38, "y": 0.10, "z": 14.75, "color": "#a0522d" },
+
+  { "name": "Window - Stue South 1", "type": "window", "w": 1.50, "h": 1.20, "d": 0.20, "x": 1.00, "y": 1.00, "z": 0.00, "color": "#add8e6" },
+  { "name": "Window - Stue South 2", "type": "window", "w": 1.50, "h": 1.20, "d": 0.20, "x": 3.50, "y": 1.00, "z": 0.00, "color": "#add8e6" },
+  { "name": "Window - Stue West", "type": "window", "w": 0.20, "h": 1.20, "d": 1.00, "x": 0.00, "y": 1.00, "z": 1.00, "color": "#add8e6" },
+  { "name": "Window - Køkken South", "type": "window", "w": 1.50, "h": 1.20, "d": 0.20, "x": 9.50, "y": 1.00, "z": 0.00, "color": "#add8e6" },
+  { "name": "Glass Wall - Hallway West", "type": "window", "w": 0.20, "h": 2.50, "d": 4.75, "x": 9.42, "y": 0.10, "z": 5.82, "color": "#add8e6" },
+  { "name": "Window - Master Bath West", "type": "window", "w": 0.20, "h": 1.20, "d": 1.00, "x": 9.42, "y": 1.00, "z": 14.50, "color": "#add8e6" }
+]

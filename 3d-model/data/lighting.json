@@ -1,0 +1,4 @@
+{
+  "ambient": { "color": "#ffffff", "intensity": 0.5 },
+  "sun": { "x": 10.0, "y": 15.0, "z": -5.0, "color": "#fffce0", "intensity": 1.2 }
+}

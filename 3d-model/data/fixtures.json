@@ -1,0 +1,6 @@
+[
+  { "name": "Fireplace (Pejs)", "w": 0.60, "h": 2.50, "d": 2.20, "x": 6.32, "y": 0.10, "z": 2.50, "color": "#333333" },
+  { "name": "South Counter Run", "w": 5.51, "h": 0.90, "d": 0.60, "x": 6.80, "y": 0.10, "z": 0.20, "color": "#aaaaaa" },
+  { "name": "Kitchen Island", "w": 1.20, "h": 0.90, "d": 3.00, "x": 8.50, "y": 0.10, "z": 2.00, "color": "#dddddd" },
+  { "name": "Master Bathtub", "w": 0.80, "h": 0.60, "d": 1.84, "x": 9.62, "y": 0.10, "z": 14.50, "color": "#eeeeee" }
+]
